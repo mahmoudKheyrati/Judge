@@ -1,3 +1,0 @@
-C:/WORK_SPACE/UNIVERSIY/C/judge/cmake-build-debug/CMakeFiles/judge.dir
-C:/WORK_SPACE/UNIVERSIY/C/judge/cmake-build-debug/CMakeFiles/edit_cache.dir
-C:/WORK_SPACE/UNIVERSIY/C/judge/cmake-build-debug/CMakeFiles/rebuild_cache.dir
