@@ -22,14 +22,16 @@ void exampleStart() {
     // use it when you don't need the index and only need the item
     int numbers[] = {1, 5, 3, 2, 5, 3, 23, 5};
     int sumOfNumbers = 0;
-    foreach(int *item, numbers) {
+    foreach(int *item, numbers)
+    {
         sumOfNumbers += *item;
     }
     print("%i\n\n", sumOfNumbers);
     //going throw list of Strings
     String names[3] = {"mahmoud", "ahmad", "reza"};
-    foreach(String *item, names) {
-            print("%s\n", *item);
+    foreach(String *item, names)
+    {
+        print("%s\n", *item);
 
     }
 
