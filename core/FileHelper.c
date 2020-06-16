@@ -1,26 +1,32 @@
 #include "FileHelper.h"
 #include <stdlib.h>
+#include "Macros.h"
+struct Output{
+    enum Boolean isOk;
+    String message;
 
-void readFile(){
+};
 
-}
-
-void writeFile(){
-
-}
-
-void getFilesInDirectory(){
+String readFile(String path,String filename){
 
 }
 
-void makeDirectory(){
+struct Output writeFile(String path, String filename, String content){
 
 }
 
-void isFileExist(){
+String * getFilesInDirectory(String path){
 
 }
 
-void isFolderExist(){
+struct Output makeDirectories(String path){
+
+}
+
+enum Boolean isFileExist(String path, String filename){
+
+}
+
+enum Boolean isFolderExist(String path){
 
 }

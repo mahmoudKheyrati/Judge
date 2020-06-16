@@ -11,3 +11,4 @@ typedef char* String;
         keep = !keep, count++) \
       for(item = (array)+count; keep; keep = !keep)
 #define swap(x, y, T) do { T tmp = (x); (x) = (y); (y) = tmp; } while(0)
+enum Boolean {True,False};

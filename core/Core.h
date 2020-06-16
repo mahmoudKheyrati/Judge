@@ -4,7 +4,6 @@
 #include "Core.h"
 #include <stdlib.h>
 #include "stdio.h"
-enum Boolean{False,True};
 
 struct TestCaseData{
     int testCaseNumber;
