@@ -1,6 +1,7 @@
 #include "FileHelper.h"
 #include <stdlib.h>
 #include <dirent.h>
+#include <sys/stat.h>
 #include "Macros.h"
 #include "stdio.h"
 #include "string.h"
@@ -105,8 +106,17 @@ enum Boolean makeDirectories(String path[], int n) {
     free(beforePath);
     return isOk;
 }
-
+/**
+ * check if the file is exist or not
+ * @param path
+ * @param filename
+ * @return 1 if exits and 0 for not exists
+ */
 enum Boolean isFileExist(String path, String filename) {
+    String fileAddress = fileAddressMaker(path, filename);
+    struct stat buffer;
+    int notExist = stat(fileAddress,&buffer);
+    return notExist?False:True;
 
 }
 

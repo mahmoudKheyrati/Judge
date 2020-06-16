@@ -10,3 +10,5 @@ void writeFileExample();
 void getFilesInDirectoryExample();
 
 void makeDirectoriesExample();
+
+void isFileExistsExample();

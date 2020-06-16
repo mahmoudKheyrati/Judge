@@ -32,3 +32,9 @@ void makeDirectoriesExample() {
     int isOk = makeDirectories(path,3);
     print("%i",isOk);
 }
+
+void isFileExistsExample(){
+    enum Boolean isExist= isFileExist(".","filename.txt");
+    print("%i\n",isExist);
+
+}
