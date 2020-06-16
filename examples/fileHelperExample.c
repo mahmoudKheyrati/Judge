@@ -1,5 +1,6 @@
 #include "fileHelperExample.h"
 #include "../core/FileHelper.h"
+#include "../core/Core.h"
 
 
 void readFileExample() {
@@ -21,5 +22,13 @@ void getFilesInDirectoryExample(){
     for (int i = 0; i < filesSize; ++i) {
         print("------ %s\n",files[i]);
     }
+//    freeList((void **) files, filesSize);
 
+}
+
+
+void makeDirectoriesExample() {
+    String path[3] = {"path","to","file"};
+    int isOk = makeDirectories(path,3);
+    print("%i",isOk);
 }

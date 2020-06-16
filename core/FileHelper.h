@@ -6,4 +6,6 @@ String readFile(String path, String filename);
 
 enum Boolean writeFile(String path, String filename, String content);
 
-String *getFilesInDirectory(String path,int *n);
+String *getFilesInDirectory(String path, int *n);
+
+enum Boolean makeDirectories(String path[], int n);

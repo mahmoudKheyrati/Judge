@@ -86,8 +86,24 @@ String *getFilesInDirectory(String path, int *n) {
     return result;
 }
 
-enum Boolean makeDirectories(String path) {
-
+/**
+ * make hierarchy directories
+ * @param path array of folder names {"path","to","file"}
+ * @param n number of folder name
+ * @return isSuccessful
+ */
+enum Boolean makeDirectories(String path[], int n) {
+    String beforePath=malloc(sizeof(char)*MAX_LINE_SIZE);
+    enum Boolean isOk = True ;
+    for (int i = 0; i < n; ++i) {
+        int status  =mkdir(strcat(beforePath,path[i]));
+        if(!status){
+            isOk=False;
+        }
+        strcat(beforePath,"/");
+    }
+    free(beforePath);
+    return isOk;
 }
 
 enum Boolean isFileExist(String path, String filename) {

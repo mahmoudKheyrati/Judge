@@ -8,3 +8,5 @@ void readFileExample();
 void writeFileExample();
 
 void getFilesInDirectoryExample();
+
+void makeDirectoriesExample();
