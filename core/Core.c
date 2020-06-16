@@ -6,6 +6,7 @@
 
 #define MAX_SIZE_ITEM_STRING 10000000
 #define MAX_SIZE_RESULT_STRING 100000
+#define MAX_CONCAT_LEN 1000000000
 
 /**
  *
@@ -42,6 +43,21 @@ String toJson(struct ResultData *data) {
                     "  ]\n"
                     "}", data->path, data->fileName, data->date, data->score, data->message, testCases);
 
+    return result;
+
+}
+
+/**
+ * concat list of strings
+ * @param list
+ * @param size
+ * @return concatenation of string list
+ */
+String strConcat(String list[], int size){
+    String result= malloc(sizeof(char)*MAX_CONCAT_LEN);
+    loop(i,size){
+        strcat(result,list[i]);
+    }
     return result;
 
 }
