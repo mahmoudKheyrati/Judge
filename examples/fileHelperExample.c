@@ -14,3 +14,12 @@ void writeFileExample(){
         print("there is an error");
     }
 }
+
+void getFilesInDirectoryExample(){
+    int filesSize = 0 ;
+    String * files= getFilesInDirectory("../",&filesSize);
+    for (int i = 0; i < filesSize; ++i) {
+        print("------ %s\n",files[i]);
+    }
+
+}

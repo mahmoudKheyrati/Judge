@@ -4,4 +4,7 @@
 #include "../core/FileHelper.h"
 
 void readFileExample();
+
 void writeFileExample();
+
+void getFilesInDirectoryExample();
