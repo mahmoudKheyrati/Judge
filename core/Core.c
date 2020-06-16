@@ -3,8 +3,10 @@
 #include <stdlib.h>
 #include "stdio.h"
 #include "string.h"
+
 #define MAX_SIZE_ITEM_STRING 10000000
 #define MAX_SIZE_RESULT_STRING 100000
+
 /**
  *
  * @param data object that represent the analysis of the output data
@@ -28,7 +30,7 @@ String toJson(struct ResultData *data) {
         strcat(testCases, item);
         free(item);
     }
-    String result = malloc(MAX_SIZE_RESULT_STRING+MAX_SIZE_ITEM_STRING * data->testCaseNumber * sizeof(struct TestCaseData));
+    String result = malloc(MAX_SIZE_RESULT_STRING + MAX_SIZE_ITEM_STRING * data->testCaseNumber * sizeof(struct TestCaseData));
     sprintf(result, "{\n"
                     "  \"path\": \"%s\",\n"
                     "  \"filename\": \"%s\",\n"

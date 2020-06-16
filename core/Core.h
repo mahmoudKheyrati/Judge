@@ -4,14 +4,15 @@
 #include "Core.h"
 #include <stdlib.h>
 #include "stdio.h"
+#include "FileHelper.h"
 
-struct TestCaseData{
+struct TestCaseData {
     int testCaseNumber;
     enum Boolean isPass;
     String message;
     String output;
 };
-struct ResultData{
+struct ResultData {
     String path;
     String fileName;
     String date;
@@ -22,4 +23,4 @@ struct ResultData{
 
 };
 
-String toJson(struct ResultData* data);
+String toJson(struct ResultData *data);

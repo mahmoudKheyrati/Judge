@@ -4,12 +4,9 @@
 #include "core/Core.h"
 #include "judge/Judge.h"
 #include "examples/codeConventions.h"
+#include "examples/fileHelperExample.h"
 
 int main(int argc, String argv[]) {
-    loop(i, argc) {
-        print("%s\n", argv[i]);
-    }
-    exampleStart();
-    print("Hello, World! \n");
+    
     return 0;
 }
