@@ -24,3 +24,5 @@ struct ResultData {
 };
 
 String toJson(struct ResultData *data);
+
+String strConcat(String list[], int size);
