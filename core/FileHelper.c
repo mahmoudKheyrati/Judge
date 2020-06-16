@@ -7,6 +7,8 @@
 #define MAX_LINE_SIZE 1000
 #define MAX_RESULT_SIZE MAX_LINE_SIZE*9999999
 
+String fileAddressMaker(String path , String filename);
+
 /**
  * @ifnot free the string you causes memory leak
  * @param path directory of your file
@@ -15,10 +17,7 @@
  */
 String readFile(String path, String filename) {
     // create file address
-    String fileAddress = malloc(sizeof(char) * MAX_LINE_SIZE);
-    strcpy(fileAddress, path);
-    strcat(fileAddress, "/");
-    strcat(fileAddress, filename);
+    String fileAddress = fileAddressMaker(path,filename);
 
     FILE *file = fopen(fileAddress, "r");
     if (!file) {
@@ -36,7 +35,7 @@ String readFile(String path, String filename) {
 
 }
 
-struct Output writeFile(String path, String filename, String content) {
+enum Boolean writeFile(String path, String filename, String content) {
 
 }
 
@@ -44,7 +43,7 @@ String *getFilesInDirectory(String path) {
 
 }
 
-struct Output makeDirectories(String path) {
+enum Boolean makeDirectories(String path) {
 
 }
 
@@ -54,4 +53,18 @@ enum Boolean isFileExist(String path, String filename) {
 
 enum Boolean isFolderExist(String path) {
 
+}
+/**
+ *
+ * @param path file directory
+ * @param filename
+ * @return concat path/filename
+ */
+String fileAddressMaker(String path , String filename){
+    // create file address
+    String fileAddress = malloc(sizeof(char) * MAX_LINE_SIZE);
+    strcpy(fileAddress, path);
+    strcat(fileAddress, "/");
+    strcat(fileAddress, filename);
+    return fileAddress;
 }
