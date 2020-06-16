@@ -16,7 +16,6 @@ String fileAddressMaker(String path , String filename);
  * @return file data as a Text
  */
 String readFile(String path, String filename) {
-    // create file address
     String fileAddress = fileAddressMaker(path,filename);
 
     FILE *file = fopen(fileAddress, "r");
@@ -31,11 +30,21 @@ String readFile(String path, String filename) {
     }
     free(fileAddress);
     free(line);
+    fclose(file);
     return result;
 
 }
 
 enum Boolean writeFile(String path, String filename, String content) {
+    String fileAddress = fileAddressMaker(path,filename);
+
+    FILE * file = fopen(fileAddress,"w");
+    if(!file){
+        return False;
+    }
+    fputs(content,file);
+    fclose(file);
+    return True;
 
 }
 
