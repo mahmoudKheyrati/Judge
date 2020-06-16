@@ -11,4 +11,5 @@ typedef char* String;
         keep = !keep, count++) \
       for(item = (array)+count; keep; keep = !keep)
 #define swap(x, y, T) do { T tmp = (x); (x) = (y); (y) = tmp; } while(0)
-enum Boolean {True,False};
+#define MIN_SIZE_LENGTH 10
+#define MAZ_SIZE_LENGTH 1000
