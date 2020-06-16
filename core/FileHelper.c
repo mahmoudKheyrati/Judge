@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <dirent.h>
 #include <sys/stat.h>
+#include <errno.h>
 #include "Macros.h"
 #include "stdio.h"
 #include "string.h"
@@ -119,9 +120,21 @@ enum Boolean isFileExist(String path, String filename) {
     return notExist?False:True;
 
 }
-
+/**
+ *
+ * @param path path to file
+ * @return is fileExits or not
+ */
 enum Boolean isFolderExist(String path) {
-
+    DIR* dir = opendir(path);
+    if (dir) {
+        closedir(dir);
+        return True;
+    } else if (ENOENT == errno) {
+        //file not exist
+        return False;
+    }
+    return False;
 }
 
 /**

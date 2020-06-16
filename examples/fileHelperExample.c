@@ -34,7 +34,13 @@ void makeDirectoriesExample() {
 }
 
 void isFileExistsExample(){
-    enum Boolean isExist= isFileExist(".","filename.txt");
+    enum Boolean isExist= isFileExist(".","MakeFile");
+    print("%i\n",isExist);
+
+}
+
+void isFolderExistsExample(){
+    enum Boolean isExist= isFolderExist("./path/to/file");
     print("%i\n",isExist);
 
 }

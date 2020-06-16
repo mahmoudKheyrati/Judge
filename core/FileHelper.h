@@ -11,3 +11,5 @@ String *getFilesInDirectory(String path, int *n);
 enum Boolean makeDirectories(String path[], int n);
 
 enum Boolean isFileExist(String path, String filename);
+
+enum Boolean isFolderExist(String path);

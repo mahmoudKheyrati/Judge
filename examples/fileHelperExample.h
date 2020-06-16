@@ -12,3 +12,5 @@ void getFilesInDirectoryExample();
 void makeDirectoriesExample();
 
 void isFileExistsExample();
+
+void isFolderExistsExample();
