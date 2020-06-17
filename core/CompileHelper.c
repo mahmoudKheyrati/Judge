@@ -4,8 +4,12 @@
 #include <io.h>
 #include "Core.h"
 
-void compile() {
+int compile(String codeFilePath, String codeFileName, String exeFileName) {
 
+    String gccCommand;
+    sprintf(gccCommand, "gcc -o %s %s%s", exeFileName, codeFilePath, codeFileName);
+    system(gccCommand);
+    return isFileExist(codeFilePath, exeFileName);
 }
 
 /**
@@ -23,11 +27,11 @@ void runExeFile(String exePath, String exeFilename,
                 String outputPath, String outputFileName) {
 
     mkdir(outputPath);
-    String cd[3] ={"cd ",exePath,"/"};
-    String cdCommand = strConcat(cd,3);
-    String runCommand[11]={cdCommand," && ",exeFilename,
-                           " < ",inputPath,"/",inputFilename,
-                           " > ",outputPath,"/",outputFileName};
-    String finalCommand=strConcat(runCommand,11);
+    String cd[3] = {"cd ", exePath, "/"};
+    String cdCommand = strConcat(cd, 3);
+    String runCommand[11] = {cdCommand, " && ", exeFilename,
+                             " < ", inputPath, "/", inputFilename,
+                             " > ", outputPath, "/", outputFileName};
+    String finalCommand = strConcat(runCommand, 11);
     system(finalCommand);
 }
