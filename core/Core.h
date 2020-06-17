@@ -5,6 +5,7 @@
 #include <stdlib.h>
 #include "stdio.h"
 #include "FileHelper.h"
+#include "CompileHelper.h"
 
 struct TestCaseData {
     int testCaseNumber;
