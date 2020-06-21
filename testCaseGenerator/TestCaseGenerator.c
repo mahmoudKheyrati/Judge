@@ -1,6 +1,15 @@
 #include "TestCaseGenerator.h"
 #include <stdlib.h>
-
+/**
+ * this function first makes .exe file with c file name and path then gets the inputs as its directory and sends their
+ * outputs to output file in directory which is given to function
+ * @param cFilePath path of .c file which will be compiled
+ * @param cFileName name of that .c file
+ * @param inputsPath path of directory which input files are in there
+ * @param outputsPath path of directory which we wanna send to our output files in that
+ * @param numberOfInputs number of inputs which we wanna make their test cases
+ * @return if all of inputs are right and function works good return True else Flase
+ */
 enum Boolean generate(String cFilePath, String cFileName, String inputsPath, String outputsPath, int numberOfInputs){
 
     if (!isFolderExist(cFilePath)){
