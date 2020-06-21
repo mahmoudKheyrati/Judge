@@ -3,11 +3,17 @@
 #include <stdlib.h>
 #include <io.h>
 #include "Core.h"
-
-int compile(String codeFilePath, String codeFileName, String exeFileName) {
+/**
+ * making exe file with gcc in cmd
+ * @param codeFilePath
+ * @param codeFileName
+ * @param exeFileName
+ * @return if compile is made correctly return 1
+ */
+enum Boolean compile(String codeFilePath, String codeFileName, String exeFileName) {
 
     String gccCommand;
-    sprintf(gccCommand, "gcc -o %s %s%s", exeFileName, codeFilePath, codeFileName);
+    sprintf(gccCommand, "gcc -o %s %s\\%s", exeFileName, codeFilePath, codeFileName);
     system(gccCommand);
     return isFileExist(codeFilePath, exeFileName);
 }
