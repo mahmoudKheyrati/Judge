@@ -1,3 +1,5 @@
 #pragma once
 
-#include "../core/FileHelper.h"
+#include "../core/Core.h"
+#include <string.h>
+#include <time.h>

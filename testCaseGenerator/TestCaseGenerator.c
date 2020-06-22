@@ -38,7 +38,7 @@ enum Boolean generate(String cFilePath, String cFileName, String inputsPath, Str
     }
 
     //enum Boolean compile(String codeFilePath, String codeFileName, String exeFileName);
-    if (compile(cFilePath, cFileName, "compiledCFile")){
+    if (!compile(cFilePath, cFileName, "compiledCFile")){
         print("The .c compiling has problem\n");
         return False;
     }
