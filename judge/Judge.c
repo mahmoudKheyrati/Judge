@@ -64,7 +64,7 @@ void judge(String outputPath, String answerPath, String filePath, String fileNam
         if (answerIsValid) validNumberTestCases++;
         testCase[i].message = answerIsValid ? "Is Valid" : "Wrong Answer";
     }
-
+    result.testCases = testCase;
     sprintf(scoreString, "%d/%d", validNumberTestCases, numberOfTestCases);
     result.score = scoreString;
 
