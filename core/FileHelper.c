@@ -151,3 +151,14 @@ String fileAddressMaker(String path, String filename) {
     strcat(fileAddress, filename);
     return fileAddress;
 }
+/**
+ * delete single file
+ * @param filePath path/to/file
+ * @param filename
+ * @return is the file delete or not
+ */
+enum Boolean deleteFile(String filePath , String filename){
+    String fileAddress = fileAddressMaker(filePath, filename);
+    int res = remove(fileAddress);
+    return res?False:True;
+}

@@ -44,3 +44,12 @@ void isFolderExistsExample(){
     print("%i\n",isExist);
 
 }
+
+void deleteFileExample(){
+    String path = "./";
+    String filename= "outfile.txt";
+    enum Boolean isDelete = deleteFile(path,filename);
+    if (isDelete) print("delete successfully");
+    else print("an error happen during deletion of file");
+
+}
