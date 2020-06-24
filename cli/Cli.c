@@ -1,5 +1,12 @@
 #include "Cli.h"
-#include <stdio.h>
-#include <stdlib.h>
+#include <windows.h>
 
-// implement later
+
+
+void changeConsoleColor(int colorCode) {
+    // color code between 0 to 255
+    HANDLE hConsole;
+    hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+    SetConsoleTextAttribute(hConsole, colorCode);
+
+}
