@@ -45,5 +45,6 @@ enum Boolean generate(String cFilePath, String cFileName, String inputsPath, Str
         runExeFile(cFilePath, exeFileName, inputsPath, nameOfInputsInDirectory[i], outputsPath, outputFileName);
     }
     ///The exe file must be deleted
+    deleteFile("./",exeFileName);
     return True;
 }
