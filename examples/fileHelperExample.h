@@ -14,3 +14,5 @@ void makeDirectoriesExample();
 void isFileExistsExample();
 
 void isFolderExistsExample();
+
+void deleteFileExample();
