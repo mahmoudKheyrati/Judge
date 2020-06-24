@@ -1,6 +1,4 @@
 #include "Judge.h"
-#include <stdlib.h>
-
 
 enum Boolean isValid(String outputPath, String outputName, String answerPath, String answerName, String outputResult);
 
@@ -39,7 +37,6 @@ struct TestCaseData *judge(String outputPath, String answerPath, String outputFi
     TestCase->message = TestCase->isPass ? "Is Valid" : "Wrong Answer";
     return TestCase;
 }
-
 
 /**
  * this is the Judge which makes a ResultData and an array of TestCaseData then informs validation of output and sends
@@ -85,7 +82,6 @@ struct ResultData *judgeAll(String outputPath, String answerPath, String cFilePa
     free(filesInOutputDir);
     return result;
 }
-
 
 /**
  * the function will specifies that the output and answer are same or not

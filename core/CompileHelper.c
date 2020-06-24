@@ -12,7 +12,7 @@
  */
 enum Boolean compile(String codeFilePath, String codeFileName, String exeFileName) {
 
-    String gccCommand;
+    char gccCommand[50];
     sprintf(gccCommand, "gcc -o %s %s\\%s", exeFileName, codeFilePath, codeFileName);
     system(gccCommand);
     return isFileExist(codeFilePath, exeFileName);

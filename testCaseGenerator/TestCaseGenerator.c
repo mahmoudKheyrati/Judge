@@ -1,8 +1,6 @@
 #include "TestCaseGenerator.h"
 #include <stdlib.h>
 
-#define exeFileName "compiledCFile.exe"
-
 /**
  * this function first makes .exe file with c file name and path then gets the inputs as its directory and sends their
  * outputs to output file in directory which is given to function
