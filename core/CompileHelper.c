@@ -11,11 +11,22 @@
  * @return if compile is made correctly return 1
  */
 enum Boolean compile(String codeFilePath, String codeFileName, String exeFileName) {
-
-    char gccCommand[50];
-    sprintf(gccCommand, "gcc -o %s %s\\%s", exeFileName, codeFilePath, codeFileName);
-    system(gccCommand);
-    return isFileExist(codeFilePath, exeFileName);
+    char fileNameForJava[21];
+    char command[50];
+    int i=0;
+    // this will find the format of file and compile it as its format
+    while (codeFileName[i++] != '.');
+    if (codeFileName[i] == 'c') {
+        sprintf(command, "gcc -o %s %s\\%s", exeFileName, codeFilePath, codeFileName);
+        system(command);
+        return isFileExist(codeFilePath, exeFileName);
+    }
+    if(codeFileName[i] == 'j'){
+        sprintf(command, "javac -cp .;%s %s", codeFilePath, codeFileName);
+        system(command);
+        sprintf(fileNameForJava, "%s.class", codeFileName);
+        return isFileExist(codeFilePath, fileNameForJava);
+    }
 }
 
 /**
