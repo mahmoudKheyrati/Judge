@@ -9,4 +9,4 @@
 #define JUDGEMENT_RESULT_FILE_NAME "ResultOfJudgement.txt"
 #define exeFileName "compiledCFile.exe"
 
-struct ResultData *judgeAll(String outputPath, String answerPath, String cFilePath, String cFileName);
+struct ResultData *judgeAll(String outputPath, String answerPath, String filePath, String fileName);

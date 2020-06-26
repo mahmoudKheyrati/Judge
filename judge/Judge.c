@@ -10,11 +10,7 @@ enum Boolean isValid(String outputPath, String outputName, String answerPath, St
  * @param numberOfTestCases
  */
 void initResultData(struct ResultData *result, String filePath, String fileName, int numberOfTestCases) {
-    char dateString[30];
-    time_t t = time(NULL);
-    struct tm tm = *localtime(&t);
-    sprintf(dateString, "%d-%02d-%02d %02d:%02d:%02d\n", tm.tm_year + 1900, tm.tm_mon + 1, tm.tm_mday, tm.tm_hour,
-            tm.tm_min, tm.tm_sec);
+    String dateString = currentTime();
     result = (struct ResultData *) malloc(SIZE_OF_RESULT_DATA);
     result->testCaseNumber = numberOfTestCases;
     result->message = "Compiled Successfully";
@@ -47,7 +43,7 @@ struct TestCaseData *judge(String outputPath, String answerPath, String outputFi
  * @param fileName name of .c file
  * @param numberOfTestCases is the number of outputs and answers and number which the user has entered
  */
-struct ResultData *judgeAll(String outputPath, String answerPath, String cFilePath, String cFileName) {
+struct ResultData *judgeAll(String outputPath, String answerPath, String filePath, String fileName) {
     struct ResultData *result;
 
     int outputNumberFiles;
@@ -65,7 +61,7 @@ struct ResultData *judgeAll(String outputPath, String answerPath, String cFilePa
     }
 
     numberOfTestCases = answerNumberFiles;
-    initResultData(result, cFilePath, cFileName, numberOfTestCases);
+    initResultData(result, filePath, fileName, numberOfTestCases);
 
     loop(i, numberOfTestCases) {
         result->testCases[i] = *judge(outputPath, answerPath, filesInOutputDir[i], filesInAnswerDir[i]);
@@ -73,11 +69,7 @@ struct ResultData *judgeAll(String outputPath, String answerPath, String cFilePa
     }
     sprintf(scoreString, "%d/%d", validNumberTestCases, numberOfTestCases);
     result->score = scoreString;
-    /// at the output path a .txt file is made which the result of judgement is there
-    String resultAtJson = toJson(result);
-    writeFile(outputPath, JUDGEMENT_RESULT_FILE_NAME, resultAtJson);
 
-    free(resultAtJson);
     free(filesInAnswerDir);
     free(filesInOutputDir);
     return result;
