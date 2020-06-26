@@ -10,5 +10,4 @@ void useJudge(){
     // the result struct has memory in heap
     struct ResultData * result = judgeAll(outputPath, answerPath, cFilePath, cFileName);
     // if judgement had a problem the result must be NULL
-    // a .txt file in outputPath in name of "ResultOfJudgement.txt" is made which contains the result at json
 }

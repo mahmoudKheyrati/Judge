@@ -3,10 +3,24 @@
 #include <stdlib.h>
 #include "stdio.h"
 #include "string.h"
+#include <time.h>
 
 #define MAX_SIZE_ITEM_STRING 10000000
 #define MAX_SIZE_RESULT_STRING 100000
 #define MAX_CONCAT_LEN 1000000
+
+/**
+ * this function returns the current time
+ * @return dateString is a String which contains the current time
+ */
+String currentTime(){
+    String dateString = (char *)malloc(sizeof(char) * 30);
+    time_t t = time(NULL);
+    struct tm tm = *localtime(&t);
+    sprintf(dateString, "%d-%02d-%02d %02d:%02d:%02d\n", tm.tm_year + 1900, tm.tm_mon + 1, tm.tm_mday, tm.tm_hour,
+            tm.tm_min, tm.tm_sec);
+    return dateString;
+}
 
 /**
  *
