@@ -53,12 +53,8 @@ void runExeFile(String exePath, String exeFilename,
                 String outputPath, String outputFileName) {
 
     mkdir(outputPath);
-    String cd[3] = {"cd ", exePath, "\\"};
-    String cdCommand = strConcat(cd, 3);
-    String runCommand[11] = {cdCommand, " && ", exeFilename,
-                             " < ", inputPath, "\\", inputFilename,
-                             " > ", outputPath, "\\", outputFileName};
-    String finalCommand = strConcat(runCommand, 11);
+    String finalCommand = (String) malloc(sizeof(char) * MAX_SIZE_LINE);
+    sprintf(finalCommand, "%s\\%s <%s\\%s >%s\\%s", exePath, exeFilename, inputPath, inputFilename, outputPath, outputFileName);
     system(finalCommand);
 }
 
