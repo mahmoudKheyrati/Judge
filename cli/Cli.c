@@ -142,6 +142,7 @@ int historyMenu(String userArgument){
     struct fileId* filesId = (struct fileId*) malloc(MAX_ITEM_MEMORY * sizeof(struct fileId));
     int* historyItemsNumber = (int*) malloc(MAX_ITEM_MEMORY * sizeof(int));
     String* historyList = getFilesInDirectory(".\\.cJudge_hidden_history", historyItemsNumber);
+    int valid;
 
     loop(i, *historyItemsNumber){
         filesId[i].fileName = historyList[i];
@@ -150,15 +151,27 @@ int historyMenu(String userArgument){
 
     if (strcmp(userArgument, "showlist") == 0){
         showHistoryList(filesId, *historyItemsNumber);
+
+        free(historyItemsNumber);
+        free(historyList);
+        free(filesId);
         return True;
 
     } else if(strcmp(userArgument, "show") == 0){
-        if(showHistoryFile(filesId) == True)
-            return True;
-        else
-            return False;
+        valid = showHistoryFile(filesId);
+
+        free(historyItemsNumber);
+        free(historyList);
+        free(filesId);
+
+        if(valid == True || valid == False)
+            return valid;
 
     } else{
+        free(historyItemsNumber);
+        free(historyList);
+        free(filesId);
+
         changeConsoleColor(COLOR_RED);
         print("invalid argument entered ");
         return False;
