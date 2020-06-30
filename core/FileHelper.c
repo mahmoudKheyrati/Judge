@@ -95,18 +95,19 @@ String *getFilesInDirectory(String path, int *n) {
  * @return isSuccessful
  */
 enum Boolean makeDirectories(String path[], int n) {
-    String beforePath=malloc(sizeof(char)*MAX_LINE_SIZE);
-    enum Boolean isOk = True ;
+    String beforePath = malloc(sizeof(char) * MAX_LINE_SIZE);
+    enum Boolean isOk = True;
     for (int i = 0; i < n; ++i) {
-        int status  =mkdir(strcat(beforePath,path[i]));
-        if(!status){
-            isOk=False;
+        int status = mkdir(strcat(beforePath, path[i]));
+        if (!status) {
+            isOk = False;
         }
-        strcat(beforePath,"/");
+        strcat(beforePath, "/");
     }
     free(beforePath);
     return isOk;
 }
+
 /**
  * check if the file is exist or not
  * @param path
@@ -116,17 +117,18 @@ enum Boolean makeDirectories(String path[], int n) {
 enum Boolean isFileExist(String path, String filename) {
     String fileAddress = fileAddressMaker(path, filename);
     struct stat buffer;
-    int notExist = stat(fileAddress,&buffer);
-    return notExist?False:True;
+    int notExist = stat(fileAddress, &buffer);
+    return notExist ? False : True;
 
 }
+
 /**
  *
  * @param path path to file
  * @return is fileExits or not
  */
 enum Boolean isFolderExist(String path) {
-    DIR* dir = opendir(path);
+    DIR *dir = opendir(path);
     if (dir) {
         closedir(dir);
         return True;
@@ -145,20 +147,22 @@ enum Boolean isFolderExist(String path) {
  */
 String fileAddressMaker(String path, String filename) {
     // create file address
-    String fileAddress = malloc(sizeof(char) * MAX_LINE_SIZE);
+    String fileAddress;
+    fileAddress = (String) malloc(sizeof(char) * MAX_LINE_SIZE);
     strcpy(fileAddress, path);
-    strcat(fileAddress, "/");
+    strcat(fileAddress, "\\");
     strcat(fileAddress, filename);
     return fileAddress;
 }
+
 /**
  * delete single file
  * @param filePath path/to/file
  * @param filename
  * @return is the file delete or not
  */
-enum Boolean deleteFile(String filePath , String filename){
+enum Boolean deleteFile(String filePath, String filename) {
     String fileAddress = fileAddressMaker(filePath, filename);
     int res = remove(fileAddress);
-    return res?False:True;
+    return res ? False : True;
 }

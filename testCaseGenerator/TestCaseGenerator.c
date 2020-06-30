@@ -17,16 +17,16 @@ enum Boolean generateC(String cFilePath, String cFileName, String inputsPath, St
         print("The folder of .c file does not exist!\n");
         return False;
     }
-    if (isFileExist(cFilePath, cFileName)) {
+    if (!isFileExist(cFilePath, cFileName)) {
         print("The .c file does not exist!\n");
         return False;
     }
-    if (isFolderExist(inputsPath)) {
+    if (!isFolderExist(inputsPath)) {
         print("the folder of input files does not exist!");
         return False;
     }
 
-    if (isFolderExist(outputsPath)) {
+    if (!isFolderExist(outputsPath)) {
         print("the folder of output files does not exist!");
         return False;
     }
@@ -40,7 +40,8 @@ enum Boolean generateC(String cFilePath, String cFileName, String inputsPath, St
     }
 
     loop(i, numberOfFilesInDirectory) {
-        char outputFileName[20];
+        String outputFileName;
+        outputFileName = (String) malloc(sizeof(char) * 20);
         sprintf(outputFileName, "output%d.txt", i);
         runExeFile(cFilePath, resultName, inputsPath, nameOfInputsInDirectory[i], outputsPath, outputFileName);
     }
