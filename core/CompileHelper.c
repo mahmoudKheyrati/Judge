@@ -3,7 +3,7 @@
 #include <stdlib.h>
 #include <io.h>
 #include "Core.h"
-
+#define MAX_SIZE_LINE 1000
 /**
  * making exe file with gcc in cmd
  * @param codeFilePath
@@ -12,9 +12,14 @@
  * @return if compile is made correctly return 1
  */
 enum Boolean compileC(String codeFilePath, String codeFileName, String exeFileName) {
-    char command[50];
-    sprintf(command, "gcc -o %s %s\\%s", exeFileName, codeFilePath, codeFileName);
-    system(command);
+    String cdCommand;
+    cdCommand = (String) malloc(sizeof(char) * MAX_SIZE_LINE);
+    sprintf(cdCommand, "cd /d %s", codeFilePath);
+    system(cdCommand);
+    String gccCommand;
+    gccCommand = (String) malloc(sizeof(char) * MAX_SIZE_LINE);
+    sprintf(gccCommand, "gcc %s\\%s -o %s\\%s", codeFilePath, codeFileName, codeFilePath, exeFileName);
+    system(gccCommand);
     return isFileExist(codeFilePath, exeFileName);
 }
 
@@ -25,7 +30,7 @@ enum Boolean compileC(String codeFilePath, String codeFileName, String exeFileNa
  * @return if compiles correctly returns True else False
  */
 enum Boolean compileJava(String codeFilePath, String codeFileName) {
-    char fileNameForJava[21];
+    String fileNameForJava = (String) malloc(sizeof(char) * 21);
     char command[50];
     sprintf(command, "javac -cp .;%s %s", codeFilePath, codeFileName);
     system(command);
@@ -48,11 +53,11 @@ void runExeFile(String exePath, String exeFilename,
                 String outputPath, String outputFileName) {
 
     mkdir(outputPath);
-    String cd[3] = {"cd ", exePath, "/"};
+    String cd[3] = {"cd ", exePath, "\\"};
     String cdCommand = strConcat(cd, 3);
     String runCommand[11] = {cdCommand, " && ", exeFilename,
-                             " < ", inputPath, "/", inputFilename,
-                             " > ", outputPath, "/", outputFileName};
+                             " < ", inputPath, "\\", inputFilename,
+                             " > ", outputPath, "\\", outputFileName};
     String finalCommand = strConcat(runCommand, 11);
     system(finalCommand);
 }
@@ -68,8 +73,8 @@ void runExeFile(String exePath, String exeFilename,
  * @param outputFileName
  */
 void runJavaFile(String javaPath, String javaFilename,
-                String inputPath, String inputFilename,
-                String outputPath, String outputFileName) {
+                 String inputPath, String inputFilename,
+                 String outputPath, String outputFileName) {
 
     mkdir(outputPath);
     String cd[3] = {"cd ", javaPath, "/"};
