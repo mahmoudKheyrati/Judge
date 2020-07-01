@@ -3,7 +3,10 @@
 #include <stdlib.h>
 #include <io.h>
 #include "Core.h"
+#include <string.h>
+#define MAX_SIZE_NAME 50
 #define MAX_SIZE_LINE 1000
+
 /**
  * making exe file with gcc in cmd
  * @param codeFilePath
@@ -12,10 +15,7 @@
  * @return if compile is made correctly return 1
  */
 enum Boolean compileC(String codeFilePath, String codeFileName, String exeFileName) {
-    String cdCommand;
-    cdCommand = (String) malloc(sizeof(char) * MAX_SIZE_LINE);
-    sprintf(cdCommand, "cd /d %s", codeFilePath);
-    system(cdCommand);
+    strcat(exeFileName, ".exe");
     String gccCommand;
     gccCommand = (String) malloc(sizeof(char) * MAX_SIZE_LINE);
     sprintf(gccCommand, "gcc %s\\%s -o %s\\%s", codeFilePath, codeFileName, codeFilePath, exeFileName);
@@ -30,12 +30,23 @@ enum Boolean compileC(String codeFilePath, String codeFileName, String exeFileNa
  * @return if compiles correctly returns True else False
  */
 enum Boolean compileJava(String codeFilePath, String codeFileName) {
-    String fileNameForJava = (String) malloc(sizeof(char) * 21);
-    char command[50];
-    sprintf(command, "javac -cp .;%s %s", codeFilePath, codeFileName);
+
+    String codeFileNameWithJava = (String) malloc(sizeof(char) * MAX_SIZE_NAME);
+    String codeFileNameWithClass = (String) malloc(sizeof(char) * MAX_SIZE_NAME);
+    String command = (String) malloc(sizeof(char) * MAX_SIZE_NAME);
+
+    sprintf(codeFileNameWithJava, "%s.java", codeFileName);
+    sprintf(codeFileNameWithClass, "%s.class", codeFileName);
+
+    sprintf(command, "javac %s\\%s", codeFilePath, codeFileNameWithJava);
     system(command);
-    sprintf(fileNameForJava, "%s.class", codeFileName);
-    return isFileExist(codeFilePath, fileNameForJava);
+    if (isFileExist(codeFilePath, codeFileNameWithClass)) {
+        return True;
+    } else {
+        sprintf(command, "java -cp %s %s", codeFilePath, codeFileName);
+        system(command);
+        return isFileExist(codeFilePath, codeFileNameWithClass);
+    }
 }
 
 /**
@@ -54,7 +65,8 @@ void runExeFile(String exePath, String exeFilename,
 
     mkdir(outputPath);
     String finalCommand = (String) malloc(sizeof(char) * MAX_SIZE_LINE);
-    sprintf(finalCommand, "%s\\%s <%s\\%s >%s\\%s", exePath, exeFilename, inputPath, inputFilename, outputPath, outputFileName);
+    sprintf(finalCommand, "%s\\%s <%s\\%s >%s\\%s", exePath, exeFilename, inputPath, inputFilename, outputPath,
+            outputFileName);
     system(finalCommand);
 }
 
@@ -73,11 +85,8 @@ void runJavaFile(String javaPath, String javaFilename,
                  String outputPath, String outputFileName) {
 
     mkdir(outputPath);
-    String cd[3] = {"cd ", javaPath, "/"};
-    String cdCommand = strConcat(cd, 3);
-    String runCommand[11] = {cdCommand, " && ", javaFilename,
-                             " < ", inputPath, "/", inputFilename,
-                             " > ", outputPath, "/", outputFileName};
-    String finalCommand = strConcat(runCommand, 11);
+    String finalCommand = (String) malloc(sizeof(char) * MAX_SIZE_LINE);
+    sprintf(finalCommand, "java %s\\%s <%s\\%s >%s\\%s", javaPath, javaFilename, inputPath, inputFilename, outputPath,
+            outputFileName);
     system(finalCommand);
 }
