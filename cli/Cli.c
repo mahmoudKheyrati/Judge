@@ -193,7 +193,6 @@ int runCli(int argc, String argv[]){
 
     while(userInput < argc){
 
-        if(userInput != 0)
             userInput+=1;
 
         if (strcmp(argv[userInput], "compile") == 0) {
