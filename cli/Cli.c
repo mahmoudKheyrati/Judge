@@ -53,14 +53,18 @@ int saveCurrentHistory(struct ResultData *data, String resultString) {
 
     changeConsoleColor(COLOR_BLOCK_YELLOW);
     print("Do you wanna save the results? (y/n): ");
-    if (choose == '\n')
+    choose = getchar();
+    if (choose == '\n') {
         choose = getchar();
+    }
 
     if (choose != 'y' && choose != 'n') {
         changeConsoleColor(COLOR_RED);
         while (choose != 'y' && choose != 'n') {
             print("Invalid answer; enter 'y' or 'n': yes or no: ");
             choose = getchar();
+            if (choose == '\n')
+                choose = getchar();
         }
     }
     if (choose == 'n') {
@@ -166,7 +170,10 @@ int showHistoryFile(struct fileId *filesId) {
 
         changeConsoleColor(COLOR_BLOCK_YELLOW);
         print("Do you wanna save the this file in your desired path? (y/n): ");
+
         choose = getchar();
+        if (choose == '\n')
+            choose = getchar();
 
         if (choose != 'y' && choose != 'n') {
             changeConsoleColor(COLOR_RED);
