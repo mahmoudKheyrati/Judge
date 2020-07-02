@@ -50,7 +50,7 @@ int saveCurrentHistory(struct ResultData *data, String resultString) {
     char choose;
 
     changeConsoleColor(COLOR_BLOCK_YELLOW);
-    print("Do you wanna save the results? (y/n): ");
+    print("\nDo you wanna save the results? (y/n): ");
     choose = getchar();
 
     if (choose != 'y' && choose != 'n') {

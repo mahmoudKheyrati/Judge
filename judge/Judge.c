@@ -27,8 +27,7 @@ void initResultData(struct ResultData *result, String filePath, String fileName,
  * @param answerFileName
  * @return the testCaseData which is made in this function with its information
  */
-struct TestCaseData *
-judge(String outputPath, String answerPath, String outputFileName, String answerFileName, int timeLimit) {
+struct TestCaseData * judge(String outputPath, String answerPath, String outputFileName, String answerFileName, int timeLimit) {
     struct timeval start;
     gettimeofday(&start, NULL);
 
@@ -63,7 +62,7 @@ struct ResultData *judgeAll(String outputPath, String answerPath, String filePat
     int answerNumberFiles;
     int numberOfTestCases;
     int validNumberTestCases = 0;
-    char scoreString[15];
+    String scoreString = malloc(15* sizeof(char));
 
     String *filesInOutputDir = getFilesInDirectory(outputPath, &outputNumberFiles);
     String *filesInAnswerDir = getFilesInDirectory(answerPath, &answerNumberFiles);
