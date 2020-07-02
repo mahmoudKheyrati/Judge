@@ -6,7 +6,7 @@
 
 void commandDescription(){
     changeConsoleColor(COLOR_WHITE);
-    print("Allowed commands\n");
+    print("Allowed commands:\n");
 
     print("For entering path you can use  either relative or absolute address\n");
     changeConsoleColor(COLOR_CYAN);
@@ -120,7 +120,8 @@ void fullHelpDescription(){
     changeConsoleColor(COLOR_WHITE);
     print("      %25s\n", " \"cjudge judge your_code_name your_code_path your_output_path generated(answer)_output_path\"");
     print("      %25s\n", "Enter your code name (java/c). Then enter your file path. And then enter the path ");
-    print("      %25s\n", "of your output directory and the path of generated output directory. Enter your paths as said before");
+    print("      %25s\n", "of your output directory and the path of generated output directory. Enter your paths as said before.");
+    print("      %25s\n", "Then, enter the time limit for each judging by millisecond (1000ms = 1s)");
     print("      %25s\n\n\n", "Please take note that generated output directory is important to contain valid & true answers!");
 
 
