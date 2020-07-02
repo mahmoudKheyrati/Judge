@@ -1,10 +1,12 @@
 #include "Cli.h"
 #include <windows.h>
+#include <dirent.h>
+#include <sys/stat.h>
 
 #define MAX_FILE_NAME 500
 #define MAX_ITEM_MEMORY 20000
 
-struct fileId{
+struct fileId {
     String fileName;
     int id;
 };
@@ -25,7 +27,7 @@ void changeConsoleColor(int colorCode) {
  * @param resultData  struct of result
  * @return resultString  str of result
  */
-String showCurrentHistory(struct ResultData* resultData){
+String showCurrentHistory(struct ResultData *resultData) {
     String resultString = toJson(resultData);
 
     changeConsoleColor(COLOR_BLOCK_YELLOW);
@@ -44,7 +46,7 @@ String showCurrentHistory(struct ResultData* resultData){
  * @param resultString str of the result
  * @return enum that show if the function works properly
  */
-int saveCurrentHistory(struct ResultData* data, String resultString) {
+int saveCurrentHistory(struct ResultData *data, String resultString) {
     char choose;
 
     changeConsoleColor(COLOR_BLOCK_YELLOW);
@@ -63,24 +65,25 @@ int saveCurrentHistory(struct ResultData* data, String resultString) {
 
     } else {
         String fileName = malloc(MAX_FILE_NAME * sizeof(char));
-        String* directoryName = malloc(MAX_FILE_NAME * sizeof(char));
+        String *directoryName = malloc(MAX_FILE_NAME * sizeof(char));
 
-        directoryName[0] = "cJudge_history";
-        makeDirectories(directoryName, 1);
+        directoryName[0] = "judge_history";
+        mkdir("judge_history");
+        directoryName[0] = ".judge_hidden_history";
+        mkdir(".judge_hidden_history");
+        struct timeval currentTime;
+        gettimeofday(&currentTime, NULL);
+        sprintf(fileName, "%s_%li.json", data->fileName, currentTime.tv_sec);
 
-        directoryName[0] = ".cJudge_hidden_history";
-        makeDirectories(directoryName, 1);
-
-        sprintf(fileName,"%s_%s.txt", data->fileName, data->date);
-
-        if (writeFile(".\\cJudge_history" , fileName, resultString)){
+        if (writeFile("./judge_history", fileName, resultString)) {
 
             changeConsoleColor(COLOR_BLOCK_GREEN);
-            print("Your file saved successfully with the name: %s in cJudge_history directory on %s.\n", fileName, data->date);
+            print("Your file saved successfully with the name: %s in judge_history directory on %s.\n", fileName,
+                  data->date);
             changeConsoleColor(COLOR_WHITE);
 
             //not sure about path
-            writeFile(".\\.cJudge_hidden_history" ,fileName, resultString);
+            writeFile(".\\.judge_hidden_history", fileName, resultString);
 
             free(fileName);
             free(directoryName);
@@ -105,12 +108,12 @@ int saveCurrentHistory(struct ResultData* data, String resultString) {
  * @param filesId  a struct* contains file name and id
  * @param historyItemsNumber number of all files in hidden history directory
  */
-void showHistoryList(struct fileId* filesId, int historyItemsNumber){
+void showHistoryList(struct fileId *filesId, int historyItemsNumber) {
     changeConsoleColor(COLOR_BLOCK_YELLOW);
     print("Your total number of history files is '%d'; Your file names is as follows:\n\n", historyItemsNumber);
     changeConsoleColor(COLOR_WHITE);
 
-    loop(i, historyItemsNumber){
+    loop(i, historyItemsNumber) {
         print(" %d.  %s\n", filesId[i].id, filesId[i].fileName);
     }
 }
@@ -120,13 +123,15 @@ void showHistoryList(struct fileId* filesId, int historyItemsNumber){
  * @param filesId  a struct* contains file name and id
  * @return enum that shows if the function works successfully
  */
-int showHistoryFile(struct fileId* filesId){
+int showHistoryFile(struct fileId *filesId) {
     int id;
 
-    print("Enter your file id (you can see the list of your history files, just enter 'cjudge -help'): ");
+    print("Enter your file id (you can see the list of your history files, just enter 'judge -help'): ");
     scanf("%d", &id);
-    if (readFile(".\\.cJudge_hidden_history", filesId[id - 1].fileName) != NULL) {
-        system("pause");
+    String result = readFile(".\\.judge_hidden_history", filesId[id - 1].fileName);
+    if ( result!= NULL) {
+        print("%s",result);
+        free(result);
         return True;
     }
     print("Your id is unavailable, make sure you have entered the correct id ");
@@ -138,18 +143,18 @@ int showHistoryFile(struct fileId* filesId){
  * @param userArgument  the argument user has entered
  * @return enum that shows if the function works successfully
  */
-int historyMenu(String userArgument){
-    struct fileId* filesId = (struct fileId*) malloc(MAX_ITEM_MEMORY * sizeof(struct fileId));
-    int* historyItemsNumber = (int*) malloc(MAX_ITEM_MEMORY * sizeof(int));
-    String* historyList = getFilesInDirectory(".\\.cJudge_hidden_history", historyItemsNumber);
+int historyMenu(String userArgument) {
+    struct fileId *filesId = (struct fileId *) malloc(MAX_ITEM_MEMORY * sizeof(struct fileId));
+    int *historyItemsNumber = (int *) malloc(MAX_ITEM_MEMORY * sizeof(int));
+    String *historyList = getFilesInDirectory(".\\.judge_hidden_history", historyItemsNumber);
     int valid;
 
-    loop(i, *historyItemsNumber){
+    loop(i, *historyItemsNumber) {
         filesId[i].fileName = historyList[i];
         filesId[i].id = i + 1;
     }
 
-    if (strcmp(userArgument, "showlist") == 0){
+    if (strcmp(userArgument, "showlist") == 0) {
         showHistoryList(filesId, *historyItemsNumber);
 
         free(historyItemsNumber);
@@ -157,13 +162,13 @@ int historyMenu(String userArgument){
         free(filesId);
         return True;
 
-    } else if(strcmp(userArgument, "show") == 0){
+    } else if (strcmp(userArgument, "show") == 0) {
         valid = showHistoryFile(filesId);
-        if (valid == False){
+        if (valid == False) {
             changeConsoleColor(COLOR_CYAN);
             print("did you use the related commands correctly?\n");
             changeConsoleColor(COLOR_WHITE);
-            print(" \"cjudge history show history_file_id\"\n");
+            print(" \"judge history show history_file_id\"\n");
 
         }
 
@@ -173,7 +178,7 @@ int historyMenu(String userArgument){
 
         return valid;
 
-    } else{
+    } else {
         free(historyItemsNumber);
         free(historyList);
         free(filesId);
@@ -183,8 +188,8 @@ int historyMenu(String userArgument){
         changeConsoleColor(COLOR_CYAN);
         print("did you use the related commands correctly?\n");
         changeConsoleColor(COLOR_WHITE);
-        print(" \"cjudge history showlist\"\n");
-        print(" \"cjudge history show history_file_id\"\n");
+        print(" \"judge history showlist\"\n");
+        print(" \"judge history show history_file_id\"\n");
 
         return False;
     }
@@ -196,16 +201,18 @@ int historyMenu(String userArgument){
  * @param expectedUserInputs
  * @return enum shows error
  */
-int isNumberEqual(int allUserInputs, int expectedUserInputs){
-    if (allUserInputs < expectedUserInputs + 1){
+int isNumberEqual(int allUserInputs, int expectedUserInputs) {
+    if (allUserInputs < expectedUserInputs + 1) {
         changeConsoleColor(COLOR_BLOCK_RED);
-        print("The number of entered argument: %d is less than what is expected: %d\n", allUserInputs, expectedUserInputs + 1);
+        print("The number of entered argument: %d is less than what is expected: %d\n", allUserInputs,
+              expectedUserInputs + 1);
         changeConsoleColor(COLOR_WHITE);
         return False;
 
     } else if (allUserInputs > expectedUserInputs + 1) {
         changeConsoleColor(COLOR_BLOCK_RED);
-        print("The number of entered argument: %d is more than what is expected: %d\n", allUserInputs, expectedUserInputs + 1);
+        print("The number of entered argument: %d is more than what is expected: %d\n", allUserInputs,
+              expectedUserInputs + 1);
         changeConsoleColor(COLOR_WHITE);
         return False;
     }
@@ -224,8 +231,8 @@ int cliCompile(int expectedUserInputs, int allUserInput, String userArguments[])
         changeConsoleColor(COLOR_CYAN);
         print("did you use the related commands correctly?\n");
         changeConsoleColor(COLOR_WHITE);
-        print(" \"cjudge compile c your_code_name.c your_code_path\"\n");
-        print(" \"cjudge compile java your_code_name.java your_code_path\"\n");
+        print(" \"judge compile c your_code_name.c your_code_path\"\n");
+        print(" \"judge compile java your_code_name.java your_code_path\"\n");
 
         return False;
     }
@@ -248,7 +255,7 @@ int cliCompile(int expectedUserInputs, int allUserInput, String userArguments[])
             changeConsoleColor(COLOR_CYAN);
             print("did you use the related commands correctly?\n");
             changeConsoleColor(COLOR_WHITE);
-            print(" \"cjudge compile c your_code_name.c your_code_path\"\n");
+            print(" \"judge compile c your_code_name.c your_code_path\"\n");
             free(exeName);
 
             return False;
@@ -266,7 +273,7 @@ int cliCompile(int expectedUserInputs, int allUserInput, String userArguments[])
             changeConsoleColor(COLOR_CYAN);
             print("did you use the related commands correctly?\n");
             changeConsoleColor(COLOR_WHITE);
-            print(" \"cjudge compile java your_code_name.java your_code_path\"\n");
+            print(" \"judge compile java your_code_name.java your_code_path\"\n");
             changeConsoleColor(COLOR_WHITE);
             return False;
         }
@@ -277,8 +284,8 @@ int cliCompile(int expectedUserInputs, int allUserInput, String userArguments[])
         changeConsoleColor(COLOR_CYAN);
         print("did you use the related commands correctly?\n");
         changeConsoleColor(COLOR_WHITE);
-        print(" \"cjudge compile c your_code_name.c your_code_path\"\n");
-        print(" \"cjudge compile java your_code_name.java your_code_path\"\n");
+        print(" \"judge compile c your_code_name.c your_code_path\"\n");
+        print(" \"judge compile java your_code_name.java your_code_path\"\n");
 
         return False;
     }
@@ -291,24 +298,24 @@ int cliCompile(int expectedUserInputs, int allUserInput, String userArguments[])
  * @param userArguments
  * @return enum shows if function doesn't work successfully
  */
-int cliGenerate(int expectedUserInputs, int allUserInputs, String userArguments[]){
+int cliGenerate(int expectedUserInputs, int allUserInputs, String userArguments[]) {
     if (isNumberEqual(allUserInputs, expectedUserInputs) == False) {
         changeConsoleColor(COLOR_CYAN);
         print("did you use the related commands correctly?\n");
         changeConsoleColor(COLOR_WHITE);
-        print(" \"cjudge generate c your_code_name.c your_code_path your_inputs_path the_output_path\"\n");
-        print(" \"cjudge generate java your_code_name.java your_code_path your_inputs_path the_output_path\"\n");
+        print(" \"judge generate c your_code_name.c your_code_path your_inputs_path the_output_path\"\n");
+        print(" \"judge generate java your_code_name.java your_code_path your_inputs_path the_output_path\"\n");
 
         return False;
     }
 
-    if (strcmp(userArguments[expectedUserInputs - 4], "c") == 0){
+    if (strcmp(userArguments[expectedUserInputs - 4], "c") == 0) {
 
         String exeName;
         exeName = strcat("Judged_", userArguments[expectedUserInputs - 3]);
 
         if (generateC(userArguments[expectedUserInputs - 2], userArguments[expectedUserInputs - 3],
-                      userArguments[expectedUserInputs - 1], userArguments[expectedUserInputs], exeName)){
+                      userArguments[expectedUserInputs - 1], userArguments[expectedUserInputs], exeName)) {
 
             changeConsoleColor(COLOR_BLOCK_GREEN);
             print("c test cases are generated successfully\n");
@@ -320,12 +327,12 @@ int cliGenerate(int expectedUserInputs, int allUserInputs, String userArguments[
             changeConsoleColor(COLOR_CYAN);
             print("did you use the related commands correctly?\n");
             changeConsoleColor(COLOR_WHITE);
-            print(" \"cjudge generate c your_code_name.c your_code_path your_inputs_path the_output_path\"\n");
+            print(" \"judge generate c your_code_name.c your_code_path your_inputs_path the_output_path\"\n");
 
             return False;
         }
 
-    } else if (strcmp(userArguments[expectedUserInputs - 4], "java") == 0){
+    } else if (strcmp(userArguments[expectedUserInputs - 4], "java") == 0) {
 
         if (generateJava(userArguments[expectedUserInputs - 2], userArguments[expectedUserInputs - 3],
                          userArguments[expectedUserInputs - 1], userArguments[expectedUserInputs])) {
@@ -340,7 +347,7 @@ int cliGenerate(int expectedUserInputs, int allUserInputs, String userArguments[
             changeConsoleColor(COLOR_CYAN);
             print("did you use the related commands correctly?\n");
             changeConsoleColor(COLOR_WHITE);
-            print(" \"cjudge generate java your_code_name.java your_code_path your_inputs_path the_output_path\"\n");
+            print(" \"judge generate java your_code_name.java your_code_path your_inputs_path the_output_path\"\n");
 
             return False;
         }
@@ -350,8 +357,8 @@ int cliGenerate(int expectedUserInputs, int allUserInputs, String userArguments[
         changeConsoleColor(COLOR_CYAN);
         print("did you use the related commands correctly?\n");
         changeConsoleColor(COLOR_WHITE);
-        print(" \"cjudge generate c your_code_name.c your_code_path your_inputs_path the_output_path\"\n");
-        print(" \"cjudge generate java your_code_name.java your_code_path your_inputs_path the_output_path\"\n");
+        print(" \"judge generate c your_code_name.c your_code_path your_inputs_path the_output_path\"\n");
+        print(" \"judge generate java your_code_name.java your_code_path your_inputs_path the_output_path\"\n");
 
         changeConsoleColor(COLOR_WHITE);
         return False;
@@ -365,7 +372,7 @@ int cliGenerate(int expectedUserInputs, int allUserInputs, String userArguments[
  * @param userArguments
  * @return enum shows if function doesn't work successfully
  */
-int cliJudge(int expectedUserInputs, int allUserInputs, String userArguments[]){
+int cliJudge(int expectedUserInputs, int allUserInputs, String userArguments[]) {
     struct ResultData *data;
     int validation, timeLimit;
     String resultString;
@@ -404,11 +411,11 @@ int cliJudge(int expectedUserInputs, int allUserInputs, String userArguments[]){
  * @param argv
  * @return enum that shows if the function works successfully
  */
-int runCli(int argc, String argv[]){
+int runCli(int argc, String argv[]) {
     int userInput = 1;
 
 
-    if (argc == 1){
+    if (argc == 1) {
         changeConsoleColor(COLOR_BLOCK_RED);
         print("Maybe you need a little help...\n");
         changeConsoleColor(COLOR_WHITE);
@@ -425,29 +432,29 @@ int runCli(int argc, String argv[]){
 
     } else if (strcmp(argv[userInput], "generate") == 0) {
         userInput += 5;
-        if (cliGenerate(userInput, argc, argv) == False){
+        if (cliGenerate(userInput, argc, argv) == False) {
             return False;
         }
 
-    } else if (strcmp(argv[userInput], "judge") == 0){
+    } else if (strcmp(argv[userInput], "judge") == 0) {
         userInput += 4;
-        if (cliJudge(userInput, argc, argv) == False){
+        if (cliJudge(userInput, argc, argv) == False) {
             changeConsoleColor(COLOR_CYAN);
             print("did you use the related commands correctly?\n");
             changeConsoleColor(COLOR_WHITE);
-            print(" \"cjudge judge your_code_name.(c or java) your_code_path your_output_path generated(answer)_output_path\"\n");
+            print(" \"judge judge your_code_name.(c or java) your_code_path your_output_path generated(answer)_output_path\"\n");
 
 
             return False;
         }
 
-    } else if (strcmp(argv[userInput], "-help") == 0){
+    } else if (strcmp(argv[userInput], "-help") == 0) {
         commandDescription();
         fullHelpDescription();
 
-    } else if (strcmp(argv[userInput], "history") == 0){
+    } else if (strcmp(argv[userInput], "history") == 0) {
         userInput += 1;
-        if(historyMenu(argv[userInput]) == False){
+        if (historyMenu(argv[userInput]) == False) {
             changeConsoleColor(COLOR_BLOCK_RED);
             print("\n ... the program stops here\n");
             changeConsoleColor(COLOR_WHITE);
@@ -455,14 +462,14 @@ int runCli(int argc, String argv[]){
 
     } else {
         changeConsoleColor(COLOR_BLOCK_RED);
-        print("The argument you entered is invalid. If you are new to cjudge, enter >> cjudge -help\n");
+        print("The argument you entered is invalid. If you are new to judge, enter >> judge -help\n");
         changeConsoleColor(COLOR_WHITE);
         commandDescription();
         return False;
     }
 
     changeConsoleColor(COLOR_BLOCK_GREEN);
-    print("Thanks for using cjudge!\n");
+    print("Thanks for using judge!\n");
     changeConsoleColor(COLOR_WHITE);
     return True;
 }
