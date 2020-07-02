@@ -1,7 +1,7 @@
 #include "Cli.h"
 #include <windows.h>
 
-#define MAX_FILE_NAME 1000
+#define MAX_FILE_NAME 500
 #define MAX_ITEM_MEMORY 20000
 
 struct fileId{
@@ -76,7 +76,7 @@ int saveCurrentHistory(struct ResultData* data, String resultString) {
         if (writeFile(".\\cJudge_history" , fileName, resultString)){
 
             changeConsoleColor(COLOR_BLOCK_GREEN);
-            print("Your file saved successfully with the name: %s in cJudge_history directory.\n", fileName);
+            print("Your file saved successfully with the name: %s in cJudge_history directory on %s.\n", fileName, data->date);
             changeConsoleColor(COLOR_WHITE);
 
             //not sure about path
@@ -159,13 +159,19 @@ int historyMenu(String userArgument){
 
     } else if(strcmp(userArgument, "show") == 0){
         valid = showHistoryFile(filesId);
+        if (valid == False){
+            changeConsoleColor(COLOR_CYAN);
+            print("did you use the related commands correctly?\n");
+            changeConsoleColor(COLOR_WHITE);
+            print(" \"cjudge history show history_file_id\"\n");
+
+        }
 
         free(historyItemsNumber);
         free(historyList);
         free(filesId);
 
-        if(valid == True || valid == False)
-            return valid;
+        return valid;
 
     } else{
         free(historyItemsNumber);
@@ -174,6 +180,217 @@ int historyMenu(String userArgument){
 
         changeConsoleColor(COLOR_RED);
         print("invalid argument entered ");
+        changeConsoleColor(COLOR_CYAN);
+        print("did you use the related commands correctly?\n");
+        changeConsoleColor(COLOR_WHITE);
+        print(" \"cjudge history showlist\"\n");
+        print(" \"cjudge history show history_file_id\"\n");
+
+        return False;
+    }
+}
+
+/**
+ * if user arguments != expected arguments for a specific command, returns False
+ * @param allUserInputs
+ * @param expectedUserInputs
+ * @return enum shows error
+ */
+int isNumberEqual(int allUserInputs, int expectedUserInputs){
+    if (allUserInputs < expectedUserInputs + 1){
+        changeConsoleColor(COLOR_BLOCK_RED);
+        print("The number of entered argument: %d is less than what is expected: %d\n", allUserInputs, expectedUserInputs + 1);
+        changeConsoleColor(COLOR_WHITE);
+        return False;
+
+    } else if (allUserInputs > expectedUserInputs + 1) {
+        changeConsoleColor(COLOR_BLOCK_RED);
+        print("The number of entered argument: %d is more than what is expected: %d\n", allUserInputs, expectedUserInputs + 1);
+        changeConsoleColor(COLOR_WHITE);
+        return False;
+    }
+    return True;
+}
+
+/**
+ * this function is used for compiling
+ * @param expectedUserInputs
+ * @param allUserInput
+ * @param userArguments
+ * @return enum shows if function doesn't work successfully
+ */
+int cliCompile(int expectedUserInputs, int allUserInput, String userArguments[]) {
+    if (isNumberEqual(allUserInput, expectedUserInputs) == False) {
+        changeConsoleColor(COLOR_CYAN);
+        print("did you use the related commands correctly?\n");
+        changeConsoleColor(COLOR_WHITE);
+        print(" \"cjudge compile c your_code_name.c your_code_path\"\n");
+        print(" \"cjudge compile java your_code_name.java your_code_path\"\n");
+
+        return False;
+    }
+
+    if (strcmp(userArguments[expectedUserInputs - 2], "c") == 0) {
+        String exeName = (String) malloc(MAX_FILE_NAME);
+
+        print("Please enter the desired name for your exe file(with .exe extension): ");
+        scanf("%s", exeName);
+
+        if (compileC(userArguments[expectedUserInputs], userArguments[expectedUserInputs - 1], exeName)) {
+            changeConsoleColor(COLOR_BLOCK_GREEN);
+            print("Your c code is compiled successfully\n");
+            free(exeName);
+            changeConsoleColor(COLOR_WHITE);
+
+        } else {
+            changeConsoleColor(COLOR_BLOCK_RED);
+            print(" Compiling your c code was unsuccessful ... The program stops here\n");
+            changeConsoleColor(COLOR_CYAN);
+            print("did you use the related commands correctly?\n");
+            changeConsoleColor(COLOR_WHITE);
+            print(" \"cjudge compile c your_code_name.c your_code_path\"\n");
+            free(exeName);
+
+            return False;
+        }
+    } else if (strcmp(userArguments[expectedUserInputs - 2], "java") == 0) {
+
+        if (compileJava(userArguments[expectedUserInputs], userArguments[expectedUserInputs - 1])) {
+            changeConsoleColor(COLOR_BLOCK_GREEN);
+            print("Your java code is compiled successfully\n");
+            changeConsoleColor(COLOR_WHITE);
+
+        } else {
+            changeConsoleColor(COLOR_BLOCK_RED);
+            print(" Compiling your java code was unsuccessful ... The program stops here\n");
+            changeConsoleColor(COLOR_CYAN);
+            print("did you use the related commands correctly?\n");
+            changeConsoleColor(COLOR_WHITE);
+            print(" \"cjudge compile java your_code_name.java your_code_path\"\n");
+            changeConsoleColor(COLOR_WHITE);
+            return False;
+        }
+
+    } else {
+        changeConsoleColor(COLOR_BLOCK_RED);
+        print("Invalid type is entered, the program stops here.\n");
+        changeConsoleColor(COLOR_CYAN);
+        print("did you use the related commands correctly?\n");
+        changeConsoleColor(COLOR_WHITE);
+        print(" \"cjudge compile c your_code_name.c your_code_path\"\n");
+        print(" \"cjudge compile java your_code_name.java your_code_path\"\n");
+
+        return False;
+    }
+}
+
+/**
+ * this function is used for generating test cases
+ * @param expectedUserInputs
+ * @param allUserInputs
+ * @param userArguments
+ * @return enum shows if function doesn't work successfully
+ */
+int cliGenerate(int expectedUserInputs, int allUserInputs, String userArguments[]){
+    if (isNumberEqual(allUserInputs, expectedUserInputs) == False) {
+        changeConsoleColor(COLOR_CYAN);
+        print("did you use the related commands correctly?\n");
+        changeConsoleColor(COLOR_WHITE);
+        print(" \"cjudge generate c your_code_name.c your_code_path your_inputs_path the_output_path\"\n");
+        print(" \"cjudge generate java your_code_name.java your_code_path your_inputs_path the_output_path\"\n");
+
+        return False;
+    }
+
+    if (strcmp(userArguments[expectedUserInputs - 4], "c") == 0){
+
+        String exeName;
+        exeName = strcat("cJudge_", userArguments[expectedUserInputs - 3]);
+
+        if (generateC(userArguments[expectedUserInputs - 2], userArguments[expectedUserInputs - 3],
+                      userArguments[expectedUserInputs - 1], userArguments[expectedUserInputs], exeName)){
+
+            changeConsoleColor(COLOR_BLOCK_GREEN);
+            print("c test cases are generated successfully\n");
+            changeConsoleColor(COLOR_WHITE);
+
+        } else {
+            changeConsoleColor(COLOR_BLOCK_RED);
+            print(" Generating c test cases was unsuccessful ... The program stops here\n");
+            changeConsoleColor(COLOR_CYAN);
+            print("did you use the related commands correctly?\n");
+            changeConsoleColor(COLOR_WHITE);
+            print(" \"cjudge generate c your_code_name.c your_code_path your_inputs_path the_output_path\"\n");
+
+            return False;
+        }
+
+    } else if (strcmp(userArguments[expectedUserInputs - 4], "java") == 0){
+
+        if (generateJava(userArguments[expectedUserInputs - 2], userArguments[expectedUserInputs - 3],
+                         userArguments[expectedUserInputs - 1], userArguments[expectedUserInputs])) {
+
+            changeConsoleColor(COLOR_BLOCK_GREEN);
+            print("Java test cases are generated successfully\n");
+            changeConsoleColor(COLOR_WHITE);
+
+        } else {
+            changeConsoleColor(COLOR_BLOCK_RED);
+            print(" Generating java test cases was unsuccessful ... The program stops here\n");
+            changeConsoleColor(COLOR_CYAN);
+            print("did you use the related commands correctly?\n");
+            changeConsoleColor(COLOR_WHITE);
+            print(" \"cjudge generate java your_code_name.java your_code_path your_inputs_path the_output_path\"\n");
+
+            return False;
+        }
+    } else {
+        changeConsoleColor(COLOR_BLOCK_RED);
+        print("Invalid type is entered, the program stops here.\n");
+        changeConsoleColor(COLOR_CYAN);
+        print("did you use the related commands correctly?\n");
+        changeConsoleColor(COLOR_WHITE);
+        print(" \"cjudge generate c your_code_name.c your_code_path your_inputs_path the_output_path\"\n");
+        print(" \"cjudge generate java your_code_name.java your_code_path your_inputs_path the_output_path\"\n");
+
+        changeConsoleColor(COLOR_WHITE);
+        return False;
+    }
+}
+
+/**
+ * this function is used for judging
+ * @param expectedUserInputs
+ * @param allUserInputs
+ * @param userArguments
+ * @return enum shows if function doesn't work successfully
+ */
+int cliJudge(int expectedUserInputs, int allUserInputs, String userArguments[]){
+    struct ResultData *data;
+    int validation;
+    String resultString;
+
+    if (isNumberEqual(allUserInputs, expectedUserInputs) == False) {
+        return False;
+    }
+
+    data = judgeAll(userArguments[expectedUserInputs - 1], userArguments[expectedUserInputs],
+                    userArguments[expectedUserInputs - 2], userArguments[expectedUserInputs - 3]);
+
+    if (data == NULL) {
+        changeConsoleColor(COLOR_BLOCK_RED);
+        // error description is in judge.c
+        print(" ... The program stops here\n");
+        changeConsoleColor(COLOR_WHITE);
+        return False;
+    }
+
+    data->date = currentTime();
+    resultString = showCurrentHistory(data);
+    validation = saveCurrentHistory(data, resultString);
+
+    if (validation == False) {
+        // description written
         return False;
     }
 }
@@ -185,89 +402,64 @@ int historyMenu(String userArgument){
  * @return enum that shows if the function works successfully
  */
 int runCli(int argc, String argv[]){
-    int userInput = 0;
-    struct ResultData *data;
-    int validation;
+    int userInput = 1;
 
-    print("if you are new to this program, you can enter \"cjudge -help\"\n");
 
-    while(userInput < argc){
+    if (argc == 1){
+        changeConsoleColor(COLOR_BLOCK_RED);
+        print("Maybe you need a little help...\n");
+        changeConsoleColor(COLOR_WHITE);
+        commandDescription();
+        return False;
+    }
 
-            userInput+=1;
-
-        if (strcmp(argv[userInput], "compile") == 0) {
-            userInput += 3;
-            if (compile(argv[userInput - 1], argv[userInput - 2], argv[userInput])) {
-                changeConsoleColor(COLOR_BLOCK_GREEN);
-                print("Your program compiled successfully\n");
-                changeConsoleColor(COLOR_WHITE);
-
-            } else {
-                changeConsoleColor(COLOR_BLOCK_RED);
-                print("Compiling progress was unsuccessful ... The program stops here\n");
-                changeConsoleColor(COLOR_WHITE);
-
-                return False;
-            }
-
-        } else if (strcmp(argv[userInput], "generate") == 0) {
-            userInput += 4;
-            if (generate(argv[userInput - 2], argv[userInput - 3], argv[userInput - 1],argv[userInput])) {
-                changeConsoleColor(COLOR_BLOCK_GREEN);
-                print("Test cases generated successfully\n");
-                changeConsoleColor(COLOR_WHITE);
-
-            } else {
-                changeConsoleColor(COLOR_BLOCK_RED);
-                print("Generating test cases was unsuccessful ... The program stops here\n");
-                changeConsoleColor(COLOR_WHITE);
-            }
-
-        } else if (strcmp(argv[userInput], "judge") == 0){
-            userInput += 3;
-
-            String resultStr;
-
-            data = judgeAll(argv[userInput - 1], argv[userInput],
-                            argv[userInput - 2], argv[userInput - 3]);
-            if (data == NULL) {
-                changeConsoleColor(COLOR_BLOCK_RED);
-                // error description is in judge.c
-                print("... The program stops here\n");
-                changeConsoleColor(COLOR_WHITE);
-
-                return False;
-            }
-            resultStr = showCurrentHistory(data);
-            validation = saveCurrentHistory(data, resultStr);
-
-            if (validation == False)
-                return False;
-
-        } else if (strcmp(argv[userInput], "-help") == 0){
-            helpDescription();
-            return True;
-
-        } else if (strcmp(argv[userInput], "history") == 0){
-            userInput += 1;
-            if(historyMenu(argv[userInput]) == False){
-                changeConsoleColor(COLOR_BLOCK_RED);
-                print("... the program stops here\n");
-                changeConsoleColor(COLOR_WHITE);
-            }
-
-        }  else {
-            changeConsoleColor(COLOR_BLOCK_RED);
-            print("The argument you entered is invalid. Maybe you need help!\n");
-            changeConsoleColor(COLOR_WHITE);
-            helpDescription();
+    if (strcmp(argv[userInput], "compile") == 0) {
+        userInput += 3;
+        if (cliCompile(userInput, argc, argv) == False) {
 
             return False;
         }
+
+    } else if (strcmp(argv[userInput], "generate") == 0) {
+        userInput += 5;
+        if (cliGenerate(userInput, argc, argv) == False){
+            return False;
+        }
+
+    } else if (strcmp(argv[userInput], "judge") == 0){
+        userInput += 4;
+        if (cliJudge(userInput, argc, argv) == False){
+            changeConsoleColor(COLOR_CYAN);
+            print("did you use the related commands correctly?\n");
+            changeConsoleColor(COLOR_WHITE);
+            print(" \"cjudge judge your_code_name.(c or java) your_code_path your_output_path generated(answer)_output_path\"\n");
+
+
+            return False;
+        }
+
+    } else if (strcmp(argv[userInput], "-help") == 0){
+        commandDescription();
+        fullHelpDescription();
+
+    } else if (strcmp(argv[userInput], "history") == 0){
+        userInput += 1;
+        if(historyMenu(argv[userInput]) == False){
+            changeConsoleColor(COLOR_BLOCK_RED);
+            print("\n ... the program stops here\n");
+            changeConsoleColor(COLOR_WHITE);
+        }
+
+    } else {
+        changeConsoleColor(COLOR_BLOCK_RED);
+        print("The argument you entered is invalid. If you are new to cjudge, enter >> cjudge -help\n");
+        changeConsoleColor(COLOR_WHITE);
+        commandDescription();
+        return False;
     }
+
     changeConsoleColor(COLOR_BLOCK_GREEN);
     print("Thanks for using cjudge!\n");
     changeConsoleColor(COLOR_WHITE);
-
     return True;
 }
