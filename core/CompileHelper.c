@@ -15,7 +15,6 @@
  * @return if compile is made correctly return 1
  */
 enum Boolean compileC(String codeFilePath, String codeFileName, String exeFileName) {
-    strcat(exeFileName, ".exe");
     String gccCommand;
     gccCommand = (String) malloc(sizeof(char) * MAX_SIZE_LINE);
     sprintf(gccCommand, "gcc %s\\%s -o %s\\%s", codeFilePath, codeFileName, codeFilePath, exeFileName);
