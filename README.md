@@ -8,6 +8,7 @@
  - .json output of judge in detail 📄
  - save backup of your judges 💼
  - you can read / copy backup files  
+ - and much more ...
 
 ![](https://c7.alamy.com/comp/F2G2MK/cartoon-angry-judge-cartoon-character-screaming-and-pointing-F2G2MK.jpg)
 
@@ -17,9 +18,9 @@
  
 - jdk - java 
  - make sure that you install java/ jdk and set in your envirnment variables `path`
- #usage 
+# usage 
  ### you can use this free application for checking your students code or for your own 
-####all commands: 
+#### all commands: 
 - compile 
 - judge
 - history showlist 
