@@ -12,6 +12,86 @@ struct fileId {
     int id;
 };
 
+String showCurrentHistory(struct ResultData *resultData);
+int saveCurrentHistory(struct ResultData *data, String resultString);
+int saveHiddenHistory(String result, struct fileId *filesId, int id);
+void showHistoryList(struct fileId *filesId, int historyItemsNumber);
+int showHistoryFile(struct fileId *filesId);
+int historyMenu(String userArgument);
+int isNumberEqual(int allUserInputs, int expectedUserInputs);
+int cliCompile(int expectedUserInputs, int allUserInput, String userArguments[]);
+int cliGenerate(int expectedUserInputs, int allUserInputs, String userArguments[]);
+int cliJudge(int expectedUserInputs, int allUserInputs, String userArguments[]);
+
+/**
+ * main function that executes all user command
+ * @param argc
+ * @param argv
+ * @return enum that shows if the function works successfully
+ */
+int runCli(int argc, String argv[]) {
+    int userInput = 1;
+
+
+    if (argc == 1) {
+        changeConsoleColor(COLOR_BLOCK_RED);
+        print("Maybe you need a little help...\n");
+        changeConsoleColor(COLOR_WHITE);
+        commandDescription();
+        return False;
+    }
+
+    if (strcmp(argv[userInput], "compile") == 0) {
+        userInput += 3;
+        if (cliCompile(userInput, argc, argv) == False) {
+
+            return False;
+        }
+
+    } else if (strcmp(argv[userInput], "generate") == 0) {
+        userInput += 5;
+        if (cliGenerate(userInput, argc, argv) == False) {
+            return False;
+        }
+
+    } else if (strcmp(argv[userInput], "judge") == 0) {
+        userInput += 4;
+        if (cliJudge(userInput, argc, argv) == False) {
+            changeConsoleColor(COLOR_CYAN);
+            print("did you use the related commands correctly?\n");
+            changeConsoleColor(COLOR_WHITE);
+            print(" \"judge judge your_code_name.(c or java) your_code_path your_output_path generated(answer)_output_path\"\n");
+
+
+            return False;
+        }
+
+    } else if (strcmp(argv[userInput], "-help") == 0) {
+        commandDescription();
+        fullHelpDescription();
+
+    } else if (strcmp(argv[userInput], "history") == 0) {
+        userInput += 1;
+        if (historyMenu(argv[userInput]) == False) {
+            changeConsoleColor(COLOR_BLOCK_RED);
+            print("\n ... the program stops here\n");
+            changeConsoleColor(COLOR_WHITE);
+        }
+
+    } else {
+        changeConsoleColor(COLOR_BLOCK_RED);
+        print("The argument you entered is invalid. If you are new to judge, enter >> judge -help\n");
+        changeConsoleColor(COLOR_WHITE);
+        commandDescription();
+        return False;
+    }
+
+    changeConsoleColor(COLOR_BLOCK_GREEN);
+    print("Thanks for using judge!\n");
+    changeConsoleColor(COLOR_WHITE);
+    return True;
+}
+
 /**
  * Changes cmd font color
  * @param colorCode
@@ -58,19 +138,10 @@ int saveCurrentHistory(struct ResultData *data, String resultString) {
         choose = getchar();
     }
 
-    if (choose != 'y' && choose != 'n') {
-        changeConsoleColor(COLOR_RED);
-        while (choose != 'y' && choose != 'n') {
-            print("Invalid answer; enter 'y' or 'n': yes or no: ");
-            choose = getchar();
-            if (choose == '\n')
-                choose = getchar();
-        }
-    }
     if (choose == 'n') {
         return True;
 
-    } else {
+    } else if (choose == 'y') {
         String fileName = malloc(MAX_FILE_NAME * sizeof(char));
         String *directoryName = malloc(MAX_FILE_NAME * sizeof(char));
 
@@ -106,6 +177,11 @@ int saveCurrentHistory(struct ResultData *data, String resultString) {
 
             return False;
         }
+    } else {
+        changeConsoleColor(COLOR_BLOCK_RED);
+        print("Invalid answer.\n");
+        changeConsoleColor(COLOR_WHITE);
+        return False;
     }
 }
 
@@ -175,32 +251,20 @@ int showHistoryFile(struct fileId *filesId) {
         if (choose == '\n')
             choose = getchar();
 
-        if (choose != 'y' && choose != 'n') {
-            changeConsoleColor(COLOR_RED);
-            while (choose != 'y' && choose != 'n') {
-                print("Invalid answer; enter 'y' or 'n': yes or no: ");
 
-                choose = getchar();
-                if (choose == '\n')
-                    choose = getchar();
-
-                changeConsoleColor(COLOR_WHITE);
-            }
-        }
         if (choose == 'n') {
             free(result);
             return True;
 
-        } else {
-            if (saveHiddenHistory(result, filesId, id) == True) {
-                free(result);
-                return True;
-            } else {
-                free(result);
-                return False;
-            }
+        } else if (choose == 'y') {
+            free(result);
+            return saveHiddenHistory(result, filesId, id);
 
+        } else {
+            print("Invalid answer.");
+            return False;
         }
+
     } else {
         print("Your id is unavailable, make sure you have entered the correct id ");
         free(result);
@@ -473,73 +537,4 @@ int cliJudge(int expectedUserInputs, int allUserInputs, String userArguments[]) 
         // description written
         return False;
     }
-}
-
-/**
- * main function that executes all user command
- * @param argc
- * @param argv
- * @return enum that shows if the function works successfully
- */
-int runCli(int argc, String argv[]) {
-    int userInput = 1;
-
-
-    if (argc == 1) {
-        changeConsoleColor(COLOR_BLOCK_RED);
-        print("Maybe you need a little help...\n");
-        changeConsoleColor(COLOR_WHITE);
-        commandDescription();
-        return False;
-    }
-
-    if (strcmp(argv[userInput], "compile") == 0) {
-        userInput += 3;
-        if (cliCompile(userInput, argc, argv) == False) {
-
-            return False;
-        }
-
-    } else if (strcmp(argv[userInput], "generate") == 0) {
-        userInput += 5;
-        if (cliGenerate(userInput, argc, argv) == False) {
-            return False;
-        }
-
-    } else if (strcmp(argv[userInput], "judge") == 0) {
-        userInput += 4;
-        if (cliJudge(userInput, argc, argv) == False) {
-            changeConsoleColor(COLOR_CYAN);
-            print("did you use the related commands correctly?\n");
-            changeConsoleColor(COLOR_WHITE);
-            print(" \"judge judge your_code_name.(c or java) your_code_path your_output_path generated(answer)_output_path\"\n");
-
-
-            return False;
-        }
-
-    } else if (strcmp(argv[userInput], "-help") == 0) {
-        commandDescription();
-        fullHelpDescription();
-
-    } else if (strcmp(argv[userInput], "history") == 0) {
-        userInput += 1;
-        if (historyMenu(argv[userInput]) == False) {
-            changeConsoleColor(COLOR_BLOCK_RED);
-            print("\n ... the program stops here\n");
-            changeConsoleColor(COLOR_WHITE);
-        }
-
-    } else {
-        changeConsoleColor(COLOR_BLOCK_RED);
-        print("The argument you entered is invalid. If you are new to judge, enter >> judge -help\n");
-        changeConsoleColor(COLOR_WHITE);
-        commandDescription();
-        return False;
-    }
-
-    changeConsoleColor(COLOR_BLOCK_GREEN);
-    print("Thanks for using judge!\n");
-    changeConsoleColor(COLOR_WHITE);
-    return True;
 }
