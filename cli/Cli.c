@@ -305,7 +305,7 @@ int cliGenerate(int expectedUserInputs, int allUserInputs, String userArguments[
     if (strcmp(userArguments[expectedUserInputs - 4], "c") == 0){
 
         String exeName;
-        exeName = strcat("cJudge_", userArguments[expectedUserInputs - 3]);
+        exeName = strcat("Judged_", userArguments[expectedUserInputs - 3]);
 
         if (generateC(userArguments[expectedUserInputs - 2], userArguments[expectedUserInputs - 3],
                       userArguments[expectedUserInputs - 1], userArguments[expectedUserInputs], exeName)){
@@ -367,15 +367,18 @@ int cliGenerate(int expectedUserInputs, int allUserInputs, String userArguments[
  */
 int cliJudge(int expectedUserInputs, int allUserInputs, String userArguments[]){
     struct ResultData *data;
-    int validation;
+    int validation, timeLimit;
     String resultString;
 
     if (isNumberEqual(allUserInputs, expectedUserInputs) == False) {
         return False;
     }
 
+    print("Enter the time limit for judging in ms (millisecond): ");
+    scanf("%d", &timeLimit);
+
     data = judgeAll(userArguments[expectedUserInputs - 1], userArguments[expectedUserInputs],
-                    userArguments[expectedUserInputs - 2], userArguments[expectedUserInputs - 3]);
+                    userArguments[expectedUserInputs - 2], userArguments[expectedUserInputs - 3], timeLimit);
 
     if (data == NULL) {
         changeConsoleColor(COLOR_BLOCK_RED);
