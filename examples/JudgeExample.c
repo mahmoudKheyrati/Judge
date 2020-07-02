@@ -8,6 +8,6 @@ void useJudge(){
     String cFilePath = "SomeVeryOtherPlaces/CFile";
     String cFileName = "HereIAmCFile.c";
     // the result struct has memory in heap
-    struct ResultData * result = judgeAll(outputPath, answerPath, cFilePath, cFileName);
+    //struct ResultData * result = judgeAll(outputPath, answerPath, cFilePath, cFileName);
     // if judgement had a problem the result must be NULL
 }

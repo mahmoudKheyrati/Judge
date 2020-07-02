@@ -12,5 +12,7 @@ int main(int argc, String argv[]) {
     //enum Boolean generateJava(String javaFilePath, String javaFileName, String inputsPath, String outputsPath);
     generateC("C:\\Users\\pascal\\Desktop\\test", "main.c", "C:\\Users\\pascal\\Desktop\\test\\input",
             "C:\\Users\\pascal\\Desktop\\test\\output","hello.exe");
+    judgeAll("C:\\Users\\pascal\\Desktop\\test\\output", "C:\\Users\\pascal\\Desktop\\test\\answer",
+             "C:\\Users\\pascal\\Desktop\\test", "main.c", 1000);
     return 0;
 }
