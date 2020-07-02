@@ -20,9 +20,11 @@
 #define COLOR_BLOCK_YELLOW 2
 #define COLOR_BLOCK_BLUE 9
 #define COLOR_BLOCK_RED 4
+#define COLOR_CYAN 11
 
 void changeConsoleColor(int colorCode);
 
-void helpDescription();
+void fullHelpDescription();
+void commandDescription();
 
 int runCli(int argc, String argv[]);
