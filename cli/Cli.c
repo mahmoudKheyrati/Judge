@@ -4,6 +4,7 @@
 #include <sys/stat.h>
 
 #define MAX_FILE_NAME 500
+#define MAX_PATH_CHAR 1000
 #define MAX_ITEM_MEMORY 20000
 
 struct fileId {
@@ -21,6 +22,7 @@ void changeConsoleColor(int colorCode) {
     hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
     SetConsoleTextAttribute(hConsole, colorCode);
 }
+
 
 /**
  * prints the result of judge
@@ -52,12 +54,17 @@ int saveCurrentHistory(struct ResultData *data, String resultString) {
     changeConsoleColor(COLOR_BLOCK_YELLOW);
     print("\nDo you wanna save the results? (y/n): ");
     choose = getchar();
+    if (choose == '\n') {
+        choose = getchar();
+    }
 
     if (choose != 'y' && choose != 'n') {
         changeConsoleColor(COLOR_RED);
         while (choose != 'y' && choose != 'n') {
             print("Invalid answer; enter 'y' or 'n': yes or no: ");
             choose = getchar();
+            if (choose == '\n')
+                choose = getchar();
         }
     }
     if (choose == 'n') {
@@ -82,7 +89,6 @@ int saveCurrentHistory(struct ResultData *data, String resultString) {
                   data->date);
             changeConsoleColor(COLOR_WHITE);
 
-            //not sure about path
             writeFile(".\\.judge_hidden_history", fileName, resultString);
 
             free(fileName);
@@ -100,6 +106,35 @@ int saveCurrentHistory(struct ResultData *data, String resultString) {
 
             return False;
         }
+    }
+}
+
+/**
+ * this function saves the file chosen by user in hidden directory
+ * @param result : result of judging in string format
+ * @param filesId : struct of all file names and their ids.
+ * @param id : the id of file in showlist
+ * @return enum shows if program works properly.
+ */
+int saveHiddenHistory(String result, struct fileId *filesId, int id) {
+
+    String savePath = (String) malloc(MAX_PATH_CHAR);
+    print("Please enter your desired path for saving this file (either relative or absolute): ");
+    scanf("%s", savePath);
+    if (writeFile(savePath, filesId[id - 1].fileName, result) == True) {
+        changeConsoleColor(COLOR_BLOCK_GREEN);
+        print("Your file saved successfully in %s.\n", savePath);
+        changeConsoleColor(COLOR_WHITE);
+
+        free(savePath);
+        return True;
+
+    } else {
+        changeConsoleColor(COLOR_BLOCK_RED);
+        print("Something went wrong in saving your file.\n");
+        changeConsoleColor(COLOR_WHITE);
+        free(savePath);
+        return False;
     }
 }
 
@@ -125,17 +160,52 @@ void showHistoryList(struct fileId *filesId, int historyItemsNumber) {
  */
 int showHistoryFile(struct fileId *filesId) {
     int id;
+    char choose;
 
     print("Enter your file id (you can see the list of your history files, just enter 'judge -help'): ");
     scanf("%d", &id);
     String result = readFile(".\\.judge_hidden_history", filesId[id - 1].fileName);
-    if ( result!= NULL) {
-        print("%s",result);
+    if (result != NULL) {
+        print("%s", result);
+
+        changeConsoleColor(COLOR_BLOCK_YELLOW);
+        print("Do you wanna save the this file in your desired path? (y/n): ");
+
+        choose = getchar();
+        if (choose == '\n')
+            choose = getchar();
+
+        if (choose != 'y' && choose != 'n') {
+            changeConsoleColor(COLOR_RED);
+            while (choose != 'y' && choose != 'n') {
+                print("Invalid answer; enter 'y' or 'n': yes or no: ");
+
+                choose = getchar();
+                if (choose == '\n')
+                    choose = getchar();
+
+                changeConsoleColor(COLOR_WHITE);
+            }
+        }
+        if (choose == 'n') {
+            free(result);
+            return True;
+
+        } else {
+            if (saveHiddenHistory(result, filesId, id) == True) {
+                free(result);
+                return True;
+            } else {
+                free(result);
+                return False;
+            }
+
+        }
+    } else {
+        print("Your id is unavailable, make sure you have entered the correct id ");
         free(result);
-        return True;
+        return False;
     }
-    print("Your id is unavailable, make sure you have entered the correct id ");
-    return False;
 }
 
 /**
