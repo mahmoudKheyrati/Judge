@@ -2,6 +2,16 @@
 
 enum Boolean isValid(String outputPath, String outputName, String answerPath, String answerName, String outputResult);
 
+int GetNumber(const char *str) {
+    while (!(*str >= '0' && *str <= '9') && (*str != '-') && (*str != '+')) str++;
+    int number;
+    if (sscanf(str, "%d", &number) == 1) {
+        return number;
+    }
+    // No int found
+    return -1;
+}
+
 /**
  * this function initializes the ResultData at some data look like testCaseNumber or path of file and etc.
  * @param result is pointer to structure of ResultData
@@ -27,11 +37,12 @@ void initResultData(struct ResultData *result, String filePath, String fileName,
  * @param answerFileName
  * @return the testCaseData which is made in this function with its information
  */
-struct TestCaseData * judge(String outputPath, String answerPath, String outputFileName, String answerFileName, int timeLimit) {
+struct TestCaseData *
+judge(String outputPath, String answerPath, String outputFileName, String answerFileName, int timeLimit) {
     struct timeval start;
     gettimeofday(&start, NULL);
 
-    struct TestCaseData *pTestCase = (struct TestCaseData*) malloc(SIZE_OF_TEST_CASE);
+    struct TestCaseData *pTestCase = (struct TestCaseData *) malloc(SIZE_OF_TEST_CASE);
 
     pTestCase->isPass = isValid(outputPath, outputFileName, answerPath, answerFileName, pTestCase->output);
     pTestCase->message = pTestCase->isPass ? "Is Valid" : "Wrong Answer";
@@ -62,7 +73,7 @@ struct ResultData *judgeAll(String outputPath, String answerPath, String filePat
     int answerNumberFiles;
     int numberOfTestCases;
     int validNumberTestCases = 0;
-    String scoreString = malloc(15* sizeof(char));
+    String scoreString = malloc(15 * sizeof(char));
 
     String *filesInOutputDir = getFilesInDirectory(outputPath, &outputNumberFiles);
     String *filesInAnswerDir = getFilesInDirectory(answerPath, &answerNumberFiles);
@@ -77,13 +88,40 @@ struct ResultData *judgeAll(String outputPath, String answerPath, String filePat
 
     result->testCases = (struct TestCaseData *) malloc(SIZE_OF_TEST_CASE * numberOfTestCases);
     struct TestCaseData *tempTestCase;
+    int numberOfOutput, numberOfAnswer;
+    int k = 0; // flag for answer name
     loop(i, numberOfTestCases) {
+        numberOfOutput = GetNumber(filesInOutputDir[i]);
+        numberOfAnswer = GetNumber(filesInAnswerDir[k]);
+        if (numberOfOutput != i) {
+            for (int j = i; j < numberOfOutput; j++) {
+                result->testCases[j].message = "Not Found!";
+                result->testCases[j].output = "Without Output!";
+                result->testCases[j].testCaseNumber = j;
+                result->testCases[j].isPass = False;
+            }
+            i = numberOfOutput - 1;
+            k++;
+            continue;
+        }
+        if (numberOfOutput != numberOfAnswer) {
+            for (int j = numberOfOutput; j < numberOfAnswer; j++) {
+                result->testCases[j].message = "No Answer!";
+                result->testCases[j].output = "Don't Care!";
+                result->testCases[j].testCaseNumber = j;
+                result->testCases[j].isPass = False;
+            }
+            i = numberOfAnswer - 1;
+            continue;
+        }
+
         tempTestCase = judge(outputPath, answerPath, filesInOutputDir[i], filesInAnswerDir[i], timeLimit);
         result->testCases[i].output = tempTestCase->output;
         result->testCases[i].message = tempTestCase->message;
         result->testCases[i].isPass = tempTestCase->isPass;
-        result->testCases[i].testCaseNumber = i+1;
+        result->testCases[i].testCaseNumber = i;
         if (result->testCases[i].isPass) validNumberTestCases++;
+        k++;
     }
     sprintf(scoreString, "%d/%d", validNumberTestCases, numberOfTestCases);
     result->score = scoreString;
