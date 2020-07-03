@@ -12,43 +12,43 @@ void commandDescription(){
     changeConsoleColor(COLOR_CYAN);
     print("full described help: ");
     changeConsoleColor(COLOR_WHITE);
-    print("  \"cjudge -help\"\n");
+    print("  \"judge -help\"\n");
 
     changeConsoleColor(COLOR_CYAN);
     print("c compile: ");
     changeConsoleColor(COLOR_WHITE);
-    print("  \"cjudge compile c your_code_name.c your_code_path\"\n");
+    print("  \"judge compile c your_code_name.c your_code_path\"\n");
 
     changeConsoleColor(COLOR_CYAN);
     print("java compile: ");
     changeConsoleColor(COLOR_WHITE);
-    print("  \"cjudge compile java your_code_name.java your_code_path\"\n");
+    print("  \"judge compile java your_code_name.java your_code_path\"\n");
 
     changeConsoleColor(COLOR_CYAN);
     print("c generate: ");
     changeConsoleColor(COLOR_WHITE);
-    print("  \"cjudge generate c your_code_name.c your_code_path your_inputs_path the_output_path\"\n");
+    print("  \"judge generate c your_code_name.c your_code_path your_inputs_path the_output_path\"\n");
 
     changeConsoleColor(COLOR_CYAN);
     print("java generate: ");
     changeConsoleColor(COLOR_WHITE);
-    print("  \"cjudge generate java your_code_name.java your_code_path your_input_path the_output_path\"\n");
+    print("  \"judge generate java your_code_name.java your_code_path your_input_path the_output_path\"\n");
 
     changeConsoleColor(COLOR_CYAN);
     print("judge: ");
     changeConsoleColor(COLOR_WHITE);
-    print("  \"cjudge judge your_code_name your_code_path your_output_path generated(answer)_output_path\"\n");
+    print("  \"judge judge your_code_name your_code_path your_output_path generated(answer)_output_path\"\n");
 //    print("Enter the name with .c or .java extension");
 
     changeConsoleColor(COLOR_CYAN);
     print("show list of history files with IDs: ");
     changeConsoleColor(COLOR_WHITE);
-    print("  \"cjudge history showlist\"\n");
+    print("  \"judge history showlist\"\n");
 
     changeConsoleColor(COLOR_CYAN);
     print("show data of a specific result: ");
     changeConsoleColor(COLOR_WHITE);
-    print("  \"cjudge history show history_file_id\"\n");
+    print("  \"judge history show history_file_id\"\n");
     print("Find history file id in list of history files as said above.\n");
 
 }
@@ -70,11 +70,11 @@ void fullHelpDescription(){
     changeConsoleColor(COLOR_YELLOW);
     print("To compile your code in c");
     changeConsoleColor(COLOR_WHITE);
-    print("      %25s\n", " \"cjudge compile c your_code_name.c your_code_path\"");
+    print("      %25s\n", " \"judge compile c your_code_name.c your_code_path\"");
     changeConsoleColor(COLOR_YELLOW);
     print("To compile your code in java");
     changeConsoleColor(COLOR_WHITE);
-    print("      %25s\n", " \"cjudge compile java your_code_name.java your_code_path\"");
+    print("      %25s\n", " \"judge compile java your_code_name.java your_code_path\"");
     changeConsoleColor(COLOR_WHITE);
     print("      %25s\n", "Enter the name of your code file. Then enter your code path carefully,");
     print("      %25s\n", "either absolute or relative address, like: ");
@@ -92,11 +92,11 @@ void fullHelpDescription(){
     print("  How to call it:\n");
     print("To generate your code in c");
     changeConsoleColor(COLOR_WHITE);
-    print("      %25s\n", " \"cjudge generate c your_code_name.c your_code_path your_inputs(folder)_path the_output(folder)_path\"");
+    print("      %25s\n", " \"judge generate c your_code_name.c your_code_path your_inputs(folder)_path the_output(folder)_path\"");
     changeConsoleColor(COLOR_YELLOW);
     print("To generate your code in java");
     changeConsoleColor(COLOR_WHITE);
-    print("      %25s\n", " \"cjudge generate java your_code_name.java your_code_path your_inputs(folder)_path the_output(folder)_path\"");
+    print("      %25s\n", " \"judge generate java your_code_name.java your_code_path your_inputs(folder)_path the_output(folder)_path\"");
 
     changeConsoleColor(COLOR_WHITE);
     print("      %25s\n", "Enter the name of your code file as said in compile_section. Then enter your code path. And then");
@@ -118,7 +118,7 @@ void fullHelpDescription(){
     print("  How to call it:\n");
 
     changeConsoleColor(COLOR_WHITE);
-    print("      %25s\n", " \"cjudge judge your_code_name your_code_path your_output_path generated(answer)_output_path\"");
+    print("      %25s\n", " \"judge judge your_code_name your_code_path your_output_path generated(answer)_output_path\"");
     print("      %25s\n", "Enter your code name (java/c). Then enter your file path. And then enter the path ");
     print("      %25s\n", "of your output directory and the path of generated output directory. Enter your paths as said before.");
     print("      %25s\n", "Then, enter the time limit for each judging by millisecond (1000ms = 1s)");
@@ -140,12 +140,12 @@ void fullHelpDescription(){
     changeConsoleColor(COLOR_YELLOW);
     print("  list of result files:\n");
     changeConsoleColor(COLOR_WHITE);
-    print("      %25s\n", " \"cjudge history showlist\"");
+    print("      %25s\n", " \"judge history showlist\"");
 
     changeConsoleColor(COLOR_YELLOW);
     print("  see the result:\n");
     changeConsoleColor(COLOR_WHITE);
-    print("      %25s\n", " \"cjudge history show history_file_id\"");
+    print("      %25s\n", " \"judge history show history_file_id\"");
     print("      %25s\n", "you can find your 'history file id' by calling \" history showlist\" as mentioned and see the ");
     print("      %25s\n\n\n", "id of file on the left hand side of file names: id. file_name");
 
