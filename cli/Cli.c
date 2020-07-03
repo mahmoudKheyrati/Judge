@@ -445,9 +445,10 @@ int cliGenerate(int expectedUserInputs, int allUserInputs, String userArguments[
 
     if (strcmp(userArguments[expectedUserInputs - 4], "c") == 0) {
 
+        String fileName = malloc(MAX_FILE_NAME);
         String exeName = malloc(MAX_FILE_NAME);
-        strncpy(exeName, userArguments[expectedUserInputs - 3], strlen(userArguments[expectedUserInputs - 3]) - 2);
-        sprintf(exeName, "judge_%s", userArguments[expectedUserInputs - 3]);
+        strncpy(fileName, userArguments[expectedUserInputs - 3], strlen(userArguments[expectedUserInputs - 3]) - 2);
+        sprintf(exeName, "judge_%s", fileName);
         strcat(exeName, ".exe");
 
         if (generateC(userArguments[expectedUserInputs - 2], userArguments[expectedUserInputs - 3],
