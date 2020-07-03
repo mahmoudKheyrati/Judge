@@ -445,8 +445,10 @@ int cliGenerate(int expectedUserInputs, int allUserInputs, String userArguments[
 
     if (strcmp(userArguments[expectedUserInputs - 4], "c") == 0) {
 
-        String exeName;
-        exeName = strcat("Judged_", userArguments[expectedUserInputs - 3]);
+        String exeName = malloc(MAX_FILE_NAME);
+        strncpy(exeName, userArguments[expectedUserInputs - 3], strlen(userArguments[expectedUserInputs - 3]) - 2);
+        sprintf(exeName, "judge_%s", userArguments[expectedUserInputs - 3]);
+        strcat(exeName, ".exe");
 
         if (generateC(userArguments[expectedUserInputs - 2], userArguments[expectedUserInputs - 3],
                       userArguments[expectedUserInputs - 1], userArguments[expectedUserInputs], exeName)) {
@@ -454,6 +456,7 @@ int cliGenerate(int expectedUserInputs, int allUserInputs, String userArguments[
             changeConsoleColor(COLOR_BLOCK_GREEN);
             print("c test cases are generated successfully\n");
             changeConsoleColor(COLOR_WHITE);
+            free(exeName);
 
         } else {
             changeConsoleColor(COLOR_BLOCK_RED);
@@ -462,6 +465,7 @@ int cliGenerate(int expectedUserInputs, int allUserInputs, String userArguments[
             print("did you use the related commands correctly?\n");
             changeConsoleColor(COLOR_WHITE);
             print(" \"judge generate c your_code_name.c your_code_path your_inputs_path the_output_path\"\n");
+            free(exeName);
 
             return False;
         }
